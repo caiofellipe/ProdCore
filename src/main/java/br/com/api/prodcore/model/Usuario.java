@@ -1,28 +1,27 @@
 package br.com.api.prodcore.model;
 
-import java.util.Collection;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.ConstraintMode;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ForeignKey;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
-@Table(name = "Usuario")
+@Table(name = "usuario")
 @SequenceGenerator(name = "ID", sequenceName = "ID", allocationSize = 1, initialValue = 1)
-public class Usuario implements UserDetails{
+public class Usuario {
 	
 	private static final long serialVersionUID = 1L;
 
@@ -42,7 +41,7 @@ public class Usuario implements UserDetails{
 	@Column(nullable = false)
 	private String login;
 	
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private String senha;
 	
 	@Column(name = "id_usuario", nullable = false)
@@ -50,22 +49,27 @@ public class Usuario implements UserDetails{
 	
 	@Column(nullable = false)
 	private boolean ativo;
-	
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss[.S]")	
 	@Column(name = "data_criado", nullable = false)
 	private Date dataCriado;
 	
+	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss[.S]")
 	@Column(name = "data_alterado", nullable = false)
 	private Date dataAlterado;
 	
-	@ManyToOne(targetEntity = NivelUsuario.class)
-	@JoinColumn(name = "fk_nivelUsuario_id", referencedColumnName = "id", foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "fk_nivelUsuario_id"))
+	@ManyToMany
+	@JoinColumn(name = "fk_nivel_usuario_id")
 	private List<NivelUsuario> nivelUsuario;
 	
 	public Usuario() {}
 	
-	public Usuario(String nome, String sobrenome, String email, String idUsuario, boolean ativo,
+	public Usuario(Long id, String nome, String sobrenome, String email, String idUsuario, boolean ativo,
 			Date dataCriado, Date dataAlterado, List<NivelUsuario> nivelUsuario) {
 		super();
+		this.id = id;
 		this.nome = nome;
 		this.sobrenome = sobrenome;
 		this.email = email;
@@ -74,6 +78,14 @@ public class Usuario implements UserDetails{
 		this.dataCriado = dataCriado;
 		this.dataAlterado = dataAlterado;
 		this.nivelUsuario = nivelUsuario;
+	}
+	
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
+	public Long getId() {
+		return id;
 	}
 
 	public String getNome() {
@@ -152,45 +164,5 @@ public class Usuario implements UserDetails{
 				+ login + ", senha=" + senha + ", idUsuario=" + idUsuario + ", ativo=" + ativo + ", dataCriado="
 				+ dataCriado + ", dataAlterado=" + dataAlterado + ", nivelUsuario=" + nivelUsuario + "]";
 	}
-
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return this.nivelUsuario;
-	}
-
-	@Override
-	public String getPassword() {
-		return this.senha;
-	}
-
-	@Override
-	public String getUsername() {
-		return this.login;
-	}
-
-	@Override
-	public boolean isAccountNonExpired() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
 
 }

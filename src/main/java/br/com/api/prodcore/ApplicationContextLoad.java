@@ -21,7 +21,5 @@ public class ApplicationContextLoad implements ApplicationContextAware{
 	public static ApplicationContext getApplicationContext() {
 		return applicationContext;
 	}
-	
-	
 
 }
