@@ -38,6 +38,14 @@ public class NivelUsuario implements GrantedAuthority{
 		this.sigla = sigla;
 	}
 
+	public Long getId() {
+		return id;
+	}
+	
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
 	public String getNivel() {
 		return nivel;
 	}

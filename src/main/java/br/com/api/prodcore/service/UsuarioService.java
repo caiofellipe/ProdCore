@@ -1,12 +1,11 @@
 package br.com.api.prodcore.service;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -27,9 +26,17 @@ public class UsuarioService {
 	}
 	
 	public UsuarioDTO criarUsuario(UsuarioDTO usuarioDTO) {
-		return usuarioMapper.toDTO(
-				usuarioRepository.save(
-						usuarioMapper.toEntity(usuarioDTO)));
+		Usuario usuario = usuarioRepository.findByEmailOrLogin(usuarioDTO.email(),usuarioDTO.login());
+		if(usuario == null) {
+			usuario = usuarioMapper.toEntity(usuarioDTO);
+			usuario.setAtivo(true);
+			usuario.setDataCriado(new Date());
+			usuario.setDataAlterado(new Date());
+			usuario.setIdUsuario(UUID.randomUUID());
+			return usuarioMapper.toDTO(usuarioRepository.save(usuario));
+		}
+		
+		return null;
 	}
 	
 	public UsuarioDTO procurarUsuarioId(@PathVariable Long id) {
@@ -59,6 +66,15 @@ public class UsuarioService {
 			
 			usuarioRepository.save(usuarioEncontrado);
 			return usuarioDTO;
+	}
+
+	public ResponseEntity<UsuarioDTO> listarUsuario(String nome, String email, String login) {
+		Usuario usuarioEncontrado = usuarioRepository.procuraUsuarioPorNomeOuEmailOuLogin(nome,email,login);
+		if(usuarioEncontrado != null) {
+			return ResponseEntity.ok().body(usuarioMapper.toDTO(usuarioEncontrado));
+		}
+		
+		return null;
 	}
 	
 }

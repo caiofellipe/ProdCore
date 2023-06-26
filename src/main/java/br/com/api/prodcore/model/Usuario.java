@@ -3,18 +3,24 @@ package br.com.api.prodcore.model;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -45,7 +51,7 @@ public class Usuario {
 	private String senha;
 	
 	@Column(name = "id_usuario", nullable = false)
-	private String idUsuario;
+	private UUID idUsuario;
 	
 	@Column(nullable = false)
 	private boolean ativo;
@@ -60,14 +66,14 @@ public class Usuario {
 	@Column(name = "data_alterado", nullable = false)
 	private Date dataAlterado;
 	
-	@ManyToMany
-	@JoinColumn(name = "fk_nivel_usuario_id")
-	private List<NivelUsuario> nivelUsuario;
+	@ManyToOne
+	@JoinColumn(name = "nivel_usuario_id")
+	private NivelUsuario nivelUsuario;
 	
-	public Usuario() {}
+	public Usuario() {} 
 	
-	public Usuario(Long id, String nome, String sobrenome, String email, String idUsuario, boolean ativo,
-			Date dataCriado, Date dataAlterado, List<NivelUsuario> nivelUsuario) {
+	public Usuario(Long id, String nome, String sobrenome, String email, UUID idUsuario, boolean ativo,
+			Date dataCriado, Date dataAlterado, NivelUsuario nivelUsuario) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -122,10 +128,10 @@ public class Usuario {
 		this.senha = senha;
 	}
 
-	public String getIdUsuario() {
+	public UUID getIdUsuario() {
 		return idUsuario;
 	}
-	public void setIdUsuario(String idUsuario) {
+	public void setIdUsuario(UUID idUsuario) {
 		this.idUsuario = idUsuario;
 	}
 	public boolean isAtivo() {
@@ -151,10 +157,10 @@ public class Usuario {
 		this.dataAlterado = dataAlterado;
 	}
 
-	public List<NivelUsuario> getNivelUsuario() {
+	public NivelUsuario getNivelUsuario() {
 		return nivelUsuario;
 	}
-	public void setNivelUsuario(List<NivelUsuario> nivelUsuario) {
+	public void setNivelUsuario(NivelUsuario nivelUsuario) {
 		this.nivelUsuario = nivelUsuario;
 	}
 
