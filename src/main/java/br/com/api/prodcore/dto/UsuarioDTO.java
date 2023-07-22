@@ -10,21 +10,20 @@ import br.com.api.prodcore.model.Empresa;
 import br.com.api.prodcore.model.NivelUsuario;
 
 public record UsuarioDTO(
-		Long id,	
-		String nome,
-		String sobrenome,
-		String idUsuarioConvite,
-		String email,
-		String senha,
-		String login,
-		UUID idUsuario,
-		boolean ativo,
-		@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-		Date dataCriado,
-		@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-		Date dataAlterado,
-		NivelUsuario nivelUsuario,
-		Empresa empresa,
-		byte[] foto
-	) {
-}
+	Long id,	
+	String nome,
+	String sobrenome,
+	String idUsuarioConvite,
+	String email,
+	String senha,
+	String login,
+	UUID idUsuario,
+	boolean ativo,
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+	Date dataCriado,
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+	Date dataAlterado,
+	NivelUsuario nivelUsuario,
+	Empresa empresa,
+	byte[] foto
+) {}

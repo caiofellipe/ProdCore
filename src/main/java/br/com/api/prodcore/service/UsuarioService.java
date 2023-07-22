@@ -64,8 +64,7 @@ public class UsuarioService {
 			usuarioEncontrado.setDataCriado(usuarioDTO.dataCriado());
 			usuarioEncontrado.setNivelUsuario(usuarioDTO.nivelUsuario());
 			
-			usuarioRepository.save(usuarioEncontrado);
-			return usuarioDTO;
+			return usuarioMapper.toDTO(usuarioRepository.save(usuarioEncontrado));
 	}
 
 	public ResponseEntity<UsuarioDTO> listarUsuario(String nome, String email, String login) {
