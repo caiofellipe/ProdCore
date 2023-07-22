@@ -15,11 +15,11 @@ public class UsuarioMapper {
 
 		return new UsuarioDTO(
 				usuario.getId(), usuario.getNome(), usuario.getSobrenome(), 
-				usuario.getEmail(), usuario.getLogin(), usuario.getIdUsuario(), 
-				usuario.isAtivo(), usuario.getDataCriado(), usuario.getDataAlterado(),
-				usuario.getNivelUsuario()
+				usuario.getIdUsuarioConvite(), usuario.getEmail(), usuario.getLogin(), usuario.getSenha(),
+				usuario.getIdUsuario(), usuario.isAtivo(), usuario.getDataCriado(),usuario.getDataAlterado(), 
+				usuario.getNivelUsuario(), usuario.getEmpresa(), usuario.getFoto()
 				);
-	}
+	} 
 	
 	public Usuario toEntity(UsuarioDTO usuarioDTO) {
 		if(usuarioDTO == null) {
@@ -36,10 +36,12 @@ public class UsuarioMapper {
 		usuario.setSobrenome(usuarioDTO.sobrenome());
 		usuario.setEmail(usuarioDTO.email());
 		usuario.setLogin(usuarioDTO.login());
+		usuario.setSenha(usuarioDTO.senha());
 		usuario.setIdUsuario(usuarioDTO.idUsuario());
 		usuario.setAtivo(usuarioDTO.ativo());
 		usuario.setDataCriado(usuarioDTO.dataCriado());
 		usuario.setNivelUsuario(usuarioDTO.nivelUsuario());
+		usuario.setEmpresa(usuarioDTO.empresa());
 		
 		return usuario;
 	}

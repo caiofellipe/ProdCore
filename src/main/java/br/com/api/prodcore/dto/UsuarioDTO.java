@@ -6,13 +6,16 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import br.com.api.prodcore.model.Empresa;
 import br.com.api.prodcore.model.NivelUsuario;
 
 public record UsuarioDTO(
 		Long id,	
 		String nome,
 		String sobrenome,
+		String idUsuarioConvite,
 		String email,
+		String senha,
 		String login,
 		UUID idUsuario,
 		boolean ativo,
@@ -20,6 +23,8 @@ public record UsuarioDTO(
 		Date dataCriado,
 		@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
 		Date dataAlterado,
-		NivelUsuario nivelUsuario) {
-	
+		NivelUsuario nivelUsuario,
+		Empresa empresa,
+		byte[] foto
+	) {
 }

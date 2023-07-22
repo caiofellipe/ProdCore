@@ -1,26 +1,20 @@
 package br.com.api.prodcore.model;
 
-import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -40,6 +34,8 @@ public class Usuario {
 	
 	@Column(nullable = false)
 	private String sobrenome;
+	
+	private String idUsuarioConvite;
 	
 	@Column(nullable = false)
 	private String email;
@@ -70,20 +66,31 @@ public class Usuario {
 	@JoinColumn(name = "nivel_usuario_id")
 	private NivelUsuario nivelUsuario;
 	
+	@OneToOne
+	@JoinColumn(name = "empresa_id")
+	private Empresa empresa;
+	
+	private byte[] foto;
+	
 	public Usuario() {} 
 	
-	public Usuario(Long id, String nome, String sobrenome, String email, UUID idUsuario, boolean ativo,
-			Date dataCriado, Date dataAlterado, NivelUsuario nivelUsuario) {
+	public Usuario(Long id, String nome, String sobrenome, String idUsuarioConvite, String email, String login, String senha, UUID idUsuario, boolean ativo,
+			Date dataCriado, Date dataAlterado, NivelUsuario nivelUsuario, Empresa empresa, byte[] foto) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.sobrenome = sobrenome;
+		this.idUsuarioConvite = idUsuarioConvite;
 		this.email = email;
+		this.login = login;
+		this.senha = senha;
 		this.idUsuario = idUsuario;
 		this.ativo = ativo;
 		this.dataCriado = dataCriado;
 		this.dataAlterado = dataAlterado;
 		this.nivelUsuario = nivelUsuario;
+		this.empresa = empresa;
+		this.foto = foto;
 	}
 	
 	public void setId(Long id) {
@@ -163,12 +170,36 @@ public class Usuario {
 	public void setNivelUsuario(NivelUsuario nivelUsuario) {
 		this.nivelUsuario = nivelUsuario;
 	}
+	
+	public Empresa getEmpresa() {
+		return empresa;
+	}
+	
+	public void setEmpresa(Empresa empresa) {
+		this.empresa = empresa;
+	}
+	
+	public String getIdUsuarioConvite() {
+		return idUsuarioConvite;
+	}
+	
+	public void setIdUsuarioConvite(String idUsuarioConvite) {
+		this.idUsuarioConvite = idUsuarioConvite;
+	}
+	
+	public byte[] getFoto() {
+		return foto;
+	}
+	
+	public void setFoto(byte[] foto) {
+		this.foto = foto;
+	}
 
 	@Override
 	public String toString() {
 		return "Usuario [id=" + id + ", nome=" + nome + ", sobrenome=" + sobrenome + ", email=" + email + ", login="
 				+ login + ", senha=" + senha + ", idUsuario=" + idUsuario + ", ativo=" + ativo + ", dataCriado="
-				+ dataCriado + ", dataAlterado=" + dataAlterado + ", nivelUsuario=" + nivelUsuario + "]";
+				+ dataCriado + ", dataAlterado=" + dataAlterado + ", nivelUsuario=" + nivelUsuario + ", empresId=" + empresa + ", foto=" + foto +", idUsuarioConvite=" + idUsuarioConvite +"]";
 	}
 
 }
