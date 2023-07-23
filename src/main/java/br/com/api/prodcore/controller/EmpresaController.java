@@ -18,7 +18,7 @@ import br.com.api.prodcore.service.EmpresaService;
 
 @RestController
 @RequestMapping("/api/empresa")
-public class EmpresaContoller {
+public class EmpresaController{
 	@Autowired
 	private EmpresaService empresaService;
 	

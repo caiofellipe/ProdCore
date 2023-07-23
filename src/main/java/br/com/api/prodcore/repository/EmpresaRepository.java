@@ -9,5 +9,5 @@ import br.com.api.prodcore.model.Empresa;
 public interface EmpresaRepository extends JpaRepository<Empresa, Long>{
 
 	
-	Empresa findByCNPJ(String cnpj);
+	Empresa findByCnpj(String cnpj);
 }

@@ -18,7 +18,7 @@ import br.com.api.prodcore.service.PlanoService;
 
 @RestController
 @RequestMapping("/api/plano")
-public class PlanoContoller {
+public class PlanoController{
 	@Autowired
 	private PlanoService planoService;
 	

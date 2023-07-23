@@ -23,7 +23,7 @@ public class EmpresaService {
 	}
 	
 	public EmpresaDTO criarEmpresa(EmpresaDTO empresaDTO) {
-		Empresa empresa = empresaRepository.findByCNPJ(empresaDTO.cnpj());
+		Empresa empresa = empresaRepository.findByCnpj(empresaDTO.cnpj());
 		
 		if(empresa != null) {
 			return empresaMapper.toDTO(empresa);
