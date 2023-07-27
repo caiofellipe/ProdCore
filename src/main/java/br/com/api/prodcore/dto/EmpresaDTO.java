@@ -2,8 +2,8 @@ package br.com.api.prodcore.dto;
 
 import java.util.List;
 
+import br.com.api.prodcore.model.Endereco;
 import br.com.api.prodcore.model.Plano;
-import br.com.api.prodcore.model.Usuario;
 
 public record EmpresaDTO (
 	Long id,
@@ -12,8 +12,7 @@ public record EmpresaDTO (
 	String email,
 	String ramo,
 	String telefone,
-	String endereco,
-	byte[] logo,
-	List<Plano> plano,
-	Usuario usuario
+	Endereco endereco,
+	String logo,
+	List<Plano> plano
 ){}

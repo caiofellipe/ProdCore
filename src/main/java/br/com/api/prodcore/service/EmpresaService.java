@@ -8,26 +8,34 @@ import org.springframework.stereotype.Service;
 import br.com.api.prodcore.dto.EmpresaDTO;
 import br.com.api.prodcore.dto.mapper.EmpresaMapper;
 import br.com.api.prodcore.model.Empresa;
+import br.com.api.prodcore.model.Endereco;
+import br.com.api.prodcore.model.Usuario;
 import br.com.api.prodcore.repository.EmpresaRepository;
+import br.com.api.prodcore.repository.UsuarioRepository;
 
 @Service
 public class EmpresaService {
 	
 	private final EmpresaRepository empresaRepository;
 	private final EmpresaMapper empresaMapper;
+	private final UsuarioRepository usuarioRepository;
 	
-	public EmpresaService(EmpresaRepository empresaRepository, EmpresaMapper empresaMapper) {
+	public EmpresaService(EmpresaRepository empresaRepository, EmpresaMapper empresaMapper, UsuarioRepository usuarioRepository) {
 		super();
 		this.empresaRepository = empresaRepository;
+		this.usuarioRepository = usuarioRepository;
+		
 		this.empresaMapper = empresaMapper;
 	}
 	
 	public EmpresaDTO criarEmpresa(EmpresaDTO empresaDTO) {
 		Empresa empresa = empresaRepository.findByCnpj(empresaDTO.cnpj());
-		
 		if(empresa != null) {
 			return empresaMapper.toDTO(empresa);
 		}
+		empresa = empresaMapper.toEntity(empresaDTO);
+
+
 		
 		return empresaMapper.toDTO(empresaRepository.save(empresa));
 	}
@@ -47,16 +55,14 @@ public class EmpresaService {
 	public EmpresaDTO atualizarEmpresa(EmpresaDTO empresaDTO) {
 		Empresa empresa = empresaRepository.findById(empresaDTO.id()).orElseThrow();
 		
+		empresa.setNome(empresaDTO.nome());
 		empresa.setCnpj(empresaDTO.cnpj());
 		empresa.setEmail(empresaDTO.email());
-		empresa.setEndereco(empresaDTO.endereco());
-	
-		empresa.setLogo(empresaDTO.logo());
-		empresa.setNome(empresaDTO.nome());
-		empresa.setPlanos(empresaDTO.plano());
 		empresa.setRamo(empresaDTO.ramo());
 		empresa.setTelefone(empresaDTO.telefone());
-		empresa.setUsuario(empresaDTO.usuario());
+		empresa.setEndereco(empresaDTO.endereco());
+		empresa.setLogo(empresaDTO.logo());
+		empresa.setPlanos(empresaDTO.plano());
 		
 		return empresaMapper.toDTO(empresaRepository.save(empresa));
 	}

@@ -34,7 +34,7 @@ public class EmpresaController{
 	
 	@PostMapping("/cadastrar")
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public EmpresaDTO criarEmpresa(@RequestBody EmpresaDTO empresaDTO) {
+	public EmpresaDTO criarEmpresa(@RequestBody EmpresaDTO empresaDTO) throws Exception {
 		return empresaService.criarEmpresa(empresaDTO);
 	}
 	

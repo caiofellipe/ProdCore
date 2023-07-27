@@ -8,16 +8,20 @@ import org.springframework.stereotype.Service;
 
 import br.com.api.prodcore.dto.ProdutoDTO;
 import br.com.api.prodcore.dto.mapper.ProdutoMapper;
+import br.com.api.prodcore.model.Plano;
 import br.com.api.prodcore.model.Produto;
+import br.com.api.prodcore.repository.PlanoRepository;
 import br.com.api.prodcore.repository.ProdutoRepository;
 
 @Service
 public class ProdutoService {
+	private final PlanoRepository planoRepository;
 	private final ProdutoRepository produtoRepository;
 	private final ProdutoMapper produtoMapper;
 	
-	public ProdutoService(ProdutoRepository produtoRepository, ProdutoMapper produtoMapper) {
+	public ProdutoService(ProdutoRepository produtoRepository, ProdutoMapper produtoMapper, PlanoRepository planoRepository) {
 		super();
+		this.planoRepository = planoRepository;
 		this.produtoRepository = produtoRepository;
 		this.produtoMapper = produtoMapper;
 	}
@@ -46,13 +50,14 @@ public class ProdutoService {
 	
 	public ProdutoDTO atualizarProduto(ProdutoDTO produtoDTO) {
 		Produto produto = produtoRepository.findById(produtoDTO.id()).orElseThrow();
+		Plano plano = planoRepository.findById(produtoDTO.planoId()).get();
 		
 		produto.setId(produtoDTO.id()); 
 		produto.setNome(produtoDTO.nome());
 		produto.setCategoria(produtoDTO.categoria());
 		produto.setSubCategoria(produtoDTO.subCategoria());
 		produto.setDescricao(produtoDTO.descricao()); 
-		produto.setPlano(produtoDTO.plano());
+		produto.setPlano(plano);
 		produto.setImagens(produtoDTO.imagens());
 		
 		return produtoMapper.toDTO(produtoRepository.save(produto));

@@ -10,5 +10,5 @@ public record PlanoDTO(
 	String nome,
 	String nivel,
 	List<Produto> produto,
-	Empresa empresa
+	Long empresaId
 ) {}

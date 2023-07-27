@@ -7,8 +7,11 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import br.com.api.prodcore.dto.PlanoDTO;
+import br.com.api.prodcore.dto.mapper.EmpresaMapper;
 import br.com.api.prodcore.dto.mapper.PlanoMapper;
+import br.com.api.prodcore.model.Empresa;
 import br.com.api.prodcore.model.Plano;
+import br.com.api.prodcore.repository.EmpresaRepository;
 import br.com.api.prodcore.repository.PlanoRepository;
 
 @Service
@@ -16,21 +19,29 @@ public class PlanoService {
 
 	private final PlanoRepository planoRepository;
 	private final PlanoMapper planoMapper;
+	private final EmpresaRepository empresaRepository;
+	private final EmpresaMapper empresaMapper;
 	
-	public PlanoService(PlanoRepository planoRepository, PlanoMapper planoMapper) {
+	public PlanoService(PlanoRepository planoRepository, PlanoMapper planoMapper, EmpresaRepository empresaRepository, EmpresaMapper empresaMapper) {
 		super();
 		this.planoRepository = planoRepository;
+		this.empresaRepository = empresaRepository;
+
 		this.planoMapper = planoMapper;
+		this.empresaMapper = empresaMapper;
 	}
 	
 	public PlanoDTO criarPlano(PlanoDTO planoDTO) {
-		Optional<Plano> plano = planoRepository.findById(planoDTO.id());
+		Plano plano = new Plano();
 		
-		if(plano.isPresent()) {
-			return planoMapper.toDTO(plano.get());
+		if(planoDTO.id() != null) {
+			plano = planoRepository.findById(planoDTO.id()).get();
+			return planoMapper.toDTO(plano);
 		}
 		
-		return planoMapper.toDTO(planoRepository.save(plano.get()));
+		plano = planoMapper.toEntity(planoDTO);
+		
+		return planoMapper.toDTO(planoRepository.save(plano));
 	}
 	
 	public PlanoDTO procurarPlanoPeloId(Long id) {
@@ -52,7 +63,11 @@ public class PlanoService {
 		plano.setNome(planoDTO.nome());
 		plano.setNivel(planoDTO.nivel());
 		plano.setProduto(planoDTO.produto());
-		plano.setEmpresa(planoDTO.empresa());
+		
+		if(planoDTO.empresaId() == null) {
+			Empresa empresa = empresaRepository.findById(planoDTO.empresaId()).get();
+			plano.setEmpresa(empresa);
+		}
 		
 		return planoMapper.toDTO(planoRepository.save(plano));
 	}

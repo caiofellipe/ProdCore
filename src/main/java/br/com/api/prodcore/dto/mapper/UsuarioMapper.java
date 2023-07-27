@@ -3,6 +3,7 @@ package br.com.api.prodcore.dto.mapper;
 import org.springframework.stereotype.Component;
 
 import br.com.api.prodcore.dto.UsuarioDTO;
+import br.com.api.prodcore.model.Empresa;
 import br.com.api.prodcore.model.Usuario;
 
 @Component
@@ -17,7 +18,7 @@ public class UsuarioMapper {
 				usuario.getId(), usuario.getNome(), usuario.getSobrenome(), 
 				usuario.getIdUsuarioConvite(), usuario.getEmail(), usuario.getLogin(), usuario.getSenha(),
 				usuario.getIdUsuario(), usuario.isAtivo(), usuario.getDataCriado(),usuario.getDataAlterado(), 
-				usuario.getNivelUsuario(), usuario.getEmpresa(), usuario.getFoto()
+				usuario.getNivelUsuario(), usuario.getEmpresa().getId(), usuario.getFoto()
 				);
 	} 
 	
@@ -27,6 +28,7 @@ public class UsuarioMapper {
 		}
 
 		Usuario usuario = new Usuario();
+		Empresa empresa = new Empresa();
 		
 		if(usuarioDTO.id() != null){
 			usuario.setId(usuarioDTO.id());
@@ -41,7 +43,9 @@ public class UsuarioMapper {
 		usuario.setAtivo(usuarioDTO.ativo());
 		usuario.setDataCriado(usuarioDTO.dataCriado());
 		usuario.setNivelUsuario(usuarioDTO.nivelUsuario());
-		usuario.setEmpresa(usuarioDTO.empresa());
+		
+		empresa.setId(usuarioDTO.empresaId());
+		usuario.setEmpresa(empresa);
 		
 		return usuario;
 	}

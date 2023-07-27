@@ -3,6 +3,7 @@ package br.com.api.prodcore.dto.mapper;
 import org.springframework.stereotype.Component;
 
 import br.com.api.prodcore.dto.PlanoDTO;
+import br.com.api.prodcore.model.Empresa;
 import br.com.api.prodcore.model.Plano;
 
 @Component
@@ -15,7 +16,7 @@ public class PlanoMapper {
 
 		return new PlanoDTO(
 				plano.getId(), plano.getNome(), plano.getNivel(), 
-				plano.getProduto(), plano.getEmpresa()
+				plano.getProduto(), plano.getEmpresa().getId()
 				);
 	} 
 	
@@ -25,6 +26,7 @@ public class PlanoMapper {
 		}
 
 		Plano plano = new Plano();
+		Empresa empresa = new Empresa();
 		
 		if(planoDTO.id() != null){
 			plano.setId(planoDTO.id());
@@ -33,7 +35,9 @@ public class PlanoMapper {
 		plano.setNome(planoDTO.nome());
 		plano.setNivel(planoDTO.nivel());
 		plano.setProduto(planoDTO.produto());
-		plano.setEmpresa(planoDTO.empresa());
+		
+		empresa.setId(planoDTO.empresaId());
+		plano.setEmpresa(empresa);
 		
 		return plano;
 	}

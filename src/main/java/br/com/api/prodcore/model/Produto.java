@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "produto")
 public class Produto {
@@ -29,6 +31,7 @@ public class Produto {
 	
 	@ManyToOne
 	@JoinColumn(name = "plano_id")
+	@JsonIgnore
 	private Plano plano;
 	
 	@ElementCollection

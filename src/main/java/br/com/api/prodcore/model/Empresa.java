@@ -1,16 +1,20 @@
 package br.com.api.prodcore.model;
 
-import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "empresa")
@@ -23,22 +27,24 @@ public class Empresa {
 	private String email;
 	private String ramo;
 	private String telefone;
-	private String endereco;
-	private byte[] logo;
 	
-	@OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToOne(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	@JsonManagedReference
+	private Endereco endereco;
+	
+	@Column(name = "logo", columnDefinition = "text")
+	private String logo;
+	
+	@OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	@JsonIgnore
 	private List<Plano> plano;
-	
-	@OneToOne(mappedBy = "empresa")
-	private	Usuario usuario;
-	
 	
 	public Empresa() {
 		super();
 	}
 	
-	public Empresa(Long id, String nome, String cnpj, String email, String ramo, String telefone, String endereco,
-			byte[] logo, List<Plano> plano, Usuario usuario) {
+	public Empresa(Long id, String nome, String cnpj, String email, String ramo, String telefone, Endereco endereco,
+			String logo, List<Plano> plano) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -49,7 +55,6 @@ public class Empresa {
 		this.endereco = endereco;
 		this.logo = logo;
 		this.plano = plano;
-		this.usuario = usuario;
 	}
 	
 	public Long getId() {
@@ -88,16 +93,16 @@ public class Empresa {
 	public void setTelefone(String telefone) {
 		this.telefone = telefone;
 	}
-	public String getEndereco() {
+	public Endereco getEndereco() {
 		return endereco;
 	}
-	public void setEndereco(String endereco) {
+	public void setEndereco(Endereco endereco) {
 		this.endereco = endereco;
 	}
-	public byte[] getLogo() {
+	public String getLogo() {
 		return logo;
 	}
-	public void setLogo(byte[] logo) {
+	public void setLogo(String logo) {
 		this.logo = logo;
 	}
 	public List<Plano> getPlanos() {
@@ -106,18 +111,12 @@ public class Empresa {
 	public void setPlanos(List<Plano> plano) {
 		this.plano = plano;
 	}
-	public Usuario getUsuario() {
-		return usuario;
-	}
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
-	}
 
 	@Override
 	public String toString() {
 		return "Empresa [id=" + id + ", nome=" + nome + ", cnpj=" + cnpj + ", email=" + email + ", ramo=" + ramo
-				+ ", telefone=" + telefone + ", endereco=" + endereco + ", logo=" + Arrays.toString(logo) + ", plano="
-				+ plano + ", usuario=" + usuario + "]";
+				+ ", telefone=" + telefone + ", endereco=" + endereco + ", logo=" + logo + ", plano="
+				+ plano + "]";
 	}
 
 }

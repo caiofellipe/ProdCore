@@ -1,12 +1,10 @@
 package br.com.api.prodcore.dto;
 
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import br.com.api.prodcore.model.Empresa;
 import br.com.api.prodcore.model.NivelUsuario;
 
 public record UsuarioDTO(
@@ -24,6 +22,6 @@ public record UsuarioDTO(
 	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
 	Date dataAlterado,
 	NivelUsuario nivelUsuario,
-	Empresa empresa,
+	Long empresaId,
 	byte[] foto
 ) {}

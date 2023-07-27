@@ -10,6 +10,6 @@ public record ProdutoDTO(
 	Integer categoria,
 	Integer subCategoria,
 	String descricao,
-	Plano plano,
+	Long planoId,
 	List<String> imagens
 ) {}

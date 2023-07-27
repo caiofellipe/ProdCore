@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 
 import br.com.api.prodcore.dto.EmpresaDTO;
 import br.com.api.prodcore.model.Empresa;
+import br.com.api.prodcore.model.Endereco;
 
 @Component
 public class EmpresaMapper {
@@ -14,9 +15,9 @@ public class EmpresaMapper {
 		}
 		
 		return new EmpresaDTO(
-				empresa.getId(), empresa.getCnpj(), empresa.getEmail(), empresa.getEndereco(),
-				empresa.getNome(), empresa.getRamo(), empresa.getTelefone(), empresa.getLogo(), 
-				empresa.getPlanos(), empresa.getUsuario()
+				empresa.getId(), empresa.getNome(), empresa.getCnpj(), empresa.getEmail(), 
+				empresa.getRamo(), empresa.getTelefone(), empresa.getEndereco(), empresa.getLogo(), 
+				empresa.getPlanos()
 				);
 	}
 	
@@ -26,20 +27,27 @@ public class EmpresaMapper {
 		}
 		
 		Empresa empresa = new Empresa();
+		
 		if(empresaDTO.id() != null) {
 			empresa.setId(empresaDTO.id());
 		}
 		
+		
+		
+		empresa.setNome(empresaDTO.nome());
 		empresa.setCnpj(empresaDTO.cnpj());
 		empresa.setEmail(empresaDTO.email());
-		empresa.setEndereco(empresaDTO.endereco());
-
-		empresa.setLogo(empresaDTO.logo());
-		empresa.setNome(empresaDTO.nome());
-		empresa.setPlanos(empresaDTO.plano());
 		empresa.setRamo(empresaDTO.ramo());
 		empresa.setTelefone(empresaDTO.telefone());
-		empresa.setUsuario(empresaDTO.usuario());
+		empresa.setLogo(empresaDTO.logo());
+		empresa.setPlanos(empresaDTO.plano());
+		
+		Endereco endereco = empresaDTO.endereco();
+		if(endereco != null) {
+			endereco.setEmpresa(empresa);
+			empresa.setEndereco(endereco);
+		}
+		
 		
 		return empresa;
 	}

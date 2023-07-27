@@ -29,37 +29,38 @@ public class Usuario {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Long id;
 	
-	@Column(nullable = false)
+	@Column(name = "nome")
 	private String nome;
 	
-	@Column(nullable = false)
+	@Column(name = "sobrenome")
 	private String sobrenome;
 	
+	@Column(name = "id_usuario_convite")
 	private String idUsuarioConvite;
 	
-	@Column(nullable = false)
+	@Column(name = "email")
 	private String email;
 	
-	@Column(nullable = false)
+	@Column(name = "login")
 	private String login;
 	
-	@Column(nullable = true)
+	@Column(name = "senha")
 	private String senha;
 	
-	@Column(name = "id_usuario", nullable = false)
+	@Column(name = "id_usuario")
 	private UUID idUsuario;
 	
-	@Column(nullable = false)
+	@Column(name = "ativo")
 	private boolean ativo;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss[.S]")	
-	@Column(name = "data_criado", nullable = false)
+	@Column(name = "data_criado")
 	private Date dataCriado;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss[.S]")
-	@Column(name = "data_alterado", nullable = false)
+	@Column(name = "data_alterado")
 	private Date dataAlterado;
 	
 	@ManyToOne
