@@ -1,10 +1,15 @@
 package br.com.api.prodcore.dto.mapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import br.com.api.prodcore.dto.EmpresaDTO;
+import br.com.api.prodcore.dto.PlanoDTO;
 import br.com.api.prodcore.model.Empresa;
 import br.com.api.prodcore.model.Endereco;
+import br.com.api.prodcore.model.Plano;
 
 @Component
 public class EmpresaMapper {
@@ -32,15 +37,12 @@ public class EmpresaMapper {
 			empresa.setId(empresaDTO.id());
 		}
 		
-		
-		
 		empresa.setNome(empresaDTO.nome());
 		empresa.setCnpj(empresaDTO.cnpj());
 		empresa.setEmail(empresaDTO.email());
 		empresa.setRamo(empresaDTO.ramo());
 		empresa.setTelefone(empresaDTO.telefone());
 		empresa.setLogo(empresaDTO.logo());
-		empresa.setPlanos(empresaDTO.plano());
 		
 		Endereco endereco = empresaDTO.endereco();
 		if(endereco != null) {
@@ -48,6 +50,15 @@ public class EmpresaMapper {
 			empresa.setEndereco(endereco);
 		}
 		
+		List<Plano> planos = new ArrayList<Plano>();
+		if(empresaDTO.plano() != null) {
+			for(Plano plano: empresaDTO.plano()){
+				plano.setEmpresa(empresa);
+				planos.add(plano);
+			}
+		}
+		
+		empresa.setPlanos(planos);
 		
 		return empresa;
 	}

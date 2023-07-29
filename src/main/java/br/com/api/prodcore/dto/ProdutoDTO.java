@@ -1,15 +1,15 @@
 package br.com.api.prodcore.dto;
 
-import java.util.List;
-
+import br.com.api.prodcore.model.Categoria;
 import br.com.api.prodcore.model.Plano;
+import br.com.api.prodcore.model.SubCategoria;
 
 public record ProdutoDTO(
 	Long id,
 	String nome,
-	Integer categoria,
-	Integer subCategoria,
+	Categoria categoria,
+	SubCategoria subCategoria,
 	String descricao,
-	Long planoId,
-	List<String> imagens
+	Plano plano,
+	String imagem
 ) {}

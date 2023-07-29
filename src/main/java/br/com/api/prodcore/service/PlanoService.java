@@ -9,23 +9,38 @@ import org.springframework.stereotype.Service;
 import br.com.api.prodcore.dto.PlanoDTO;
 import br.com.api.prodcore.dto.mapper.EmpresaMapper;
 import br.com.api.prodcore.dto.mapper.PlanoMapper;
+import br.com.api.prodcore.dto.mapper.ProdutoMapper;
+import br.com.api.prodcore.model.Categoria;
 import br.com.api.prodcore.model.Empresa;
 import br.com.api.prodcore.model.Plano;
+import br.com.api.prodcore.model.Produto;
+import br.com.api.prodcore.repository.CategoriaRepository;
 import br.com.api.prodcore.repository.EmpresaRepository;
 import br.com.api.prodcore.repository.PlanoRepository;
+import br.com.api.prodcore.repository.ProdutoRepository;
+import br.com.api.prodcore.repository.SubCategoriaRepository;
 
 @Service
 public class PlanoService {
 
 	private final PlanoRepository planoRepository;
-	private final PlanoMapper planoMapper;
 	private final EmpresaRepository empresaRepository;
-	private final EmpresaMapper empresaMapper;
+	private final CategoriaRepository categoriaRepository;
+	private final SubCategoriaRepository subCategoriaRepository;
 	
-	public PlanoService(PlanoRepository planoRepository, PlanoMapper planoMapper, EmpresaRepository empresaRepository, EmpresaMapper empresaMapper) {
+	private final PlanoMapper planoMapper;
+	private final EmpresaMapper empresaMapper;
+	private final ProdutoRepository produtoRepository;
+	
+	public PlanoService(PlanoRepository planoRepository, PlanoMapper planoMapper, EmpresaRepository empresaRepository,
+			CategoriaRepository categoriaRepository, SubCategoriaRepository subCategoriaRepository, ProdutoRepository produtoRepository,
+			EmpresaMapper empresaMapper) {
 		super();
 		this.planoRepository = planoRepository;
 		this.empresaRepository = empresaRepository;
+		this.categoriaRepository = categoriaRepository;
+		this.subCategoriaRepository = subCategoriaRepository;
+		this.produtoRepository = produtoRepository;
 
 		this.planoMapper = planoMapper;
 		this.empresaMapper = empresaMapper;
@@ -33,6 +48,7 @@ public class PlanoService {
 	
 	public PlanoDTO criarPlano(PlanoDTO planoDTO) {
 		Plano plano = new Plano();
+		Empresa empresa = empresaRepository.findById(planoDTO.empresaId()).orElseThrow(() -> new RuntimeException("Empresa não encontrada."));
 		
 		if(planoDTO.id() != null) {
 			plano = planoRepository.findById(planoDTO.id()).get();
@@ -40,8 +56,17 @@ public class PlanoService {
 		}
 		
 		plano = planoMapper.toEntity(planoDTO);
+		empresa.getPlanos().add(plano);
+		plano.setEmpresa(empresa);
 		
-		return planoMapper.toDTO(planoRepository.save(plano));
+		Plano planoSalvo = planoRepository.save(plano);
+		
+		for(Produto produto: plano.getProduto()) {
+			produto.setPlano(planoSalvo);
+			produtoRepository.save(produto);
+		}
+		
+		return planoMapper.toDTO(planoSalvo);
 	}
 	
 	public PlanoDTO procurarPlanoPeloId(Long id) {

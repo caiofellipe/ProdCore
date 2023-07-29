@@ -50,15 +50,13 @@ public class ProdutoService {
 	
 	public ProdutoDTO atualizarProduto(ProdutoDTO produtoDTO) {
 		Produto produto = produtoRepository.findById(produtoDTO.id()).orElseThrow();
-		Plano plano = planoRepository.findById(produtoDTO.planoId()).get();
+		Plano plano = planoRepository.findById(produtoDTO.plano().getId()).get();
 		
 		produto.setId(produtoDTO.id()); 
 		produto.setNome(produtoDTO.nome());
-		produto.setCategoria(produtoDTO.categoria());
-		produto.setSubCategoria(produtoDTO.subCategoria());
 		produto.setDescricao(produtoDTO.descricao()); 
 		produto.setPlano(plano);
-		produto.setImagens(produtoDTO.imagens());
+		produto.setImagem(produtoDTO.imagem());
 		
 		return produtoMapper.toDTO(produtoRepository.save(produto));
 	}

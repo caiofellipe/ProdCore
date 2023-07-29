@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,8 +35,8 @@ public class EmpresaController{
 	
 	@PostMapping("/cadastrar")
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public EmpresaDTO criarEmpresa(@RequestBody EmpresaDTO empresaDTO) throws Exception {
-		return empresaService.criarEmpresa(empresaDTO);
+	public ResponseEntity<EmpresaDTO> criarEmpresa(@RequestBody EmpresaDTO empresaDTO) throws Exception {
+		return ResponseEntity.ok(empresaService.criarEmpresa(empresaDTO));
 	}
 	
 	@PutMapping("/atualizar")

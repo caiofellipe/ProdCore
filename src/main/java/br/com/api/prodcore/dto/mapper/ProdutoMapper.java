@@ -3,8 +3,10 @@ package br.com.api.prodcore.dto.mapper;
 import org.springframework.stereotype.Component;
 
 import br.com.api.prodcore.dto.ProdutoDTO;
+import br.com.api.prodcore.model.Categoria;
 import br.com.api.prodcore.model.Plano;
 import br.com.api.prodcore.model.Produto;
+import br.com.api.prodcore.model.SubCategoria;
 
 @Component
 public class ProdutoMapper {
@@ -15,8 +17,8 @@ public class ProdutoMapper {
 
 		return new ProdutoDTO(
 				produto.getId(), produto.getNome(), produto.getCategoria(),
-				produto.getSubCategoria(), produto.getDescricao(), produto.getPlano().getId(),
-				produto.getImagens()
+				produto.getSubCategoria(), produto.getDescricao(), produto.getPlano(),
+				produto.getImagem()
 				);
 	} 
 	
@@ -26,7 +28,7 @@ public class ProdutoMapper {
 		}
 
 		Produto produto = new Produto();
-		Plano plano = new Plano();
+		
 		
 		if(produtoDTO.id() != null){
 			produto.setId(produtoDTO.id());
@@ -34,13 +36,21 @@ public class ProdutoMapper {
 		
 		produto.setId(produtoDTO.id()); 
 		produto.setNome(produtoDTO.nome());
-		produto.setCategoria(produtoDTO.categoria());
-		produto.setSubCategoria(produtoDTO.subCategoria());
 		produto.setDescricao(produtoDTO.descricao()); 
-		produto.setImagens(produtoDTO.imagens());
+		produto.setImagem(produtoDTO.imagem());
 		
-		plano.setId(produtoDTO.planoId());
-		produto.setPlano(plano);
+		Plano plano = produtoDTO.plano();
+		if(plano != null) {
+			produto.setPlano(plano);
+		}
+		
+		Categoria categoria = produtoDTO.categoria();
+		SubCategoria subCategoria = produtoDTO.subCategoria();
+		
+		if(categoria != null && subCategoria != null) {
+			produto.setCategoria(categoria);
+			produto.setSubCategoria(subCategoria);
+		}
 		
 		return produto;
 	}

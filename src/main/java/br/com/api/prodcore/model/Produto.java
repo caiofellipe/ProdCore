@@ -1,9 +1,6 @@
 package br.com.api.prodcore.model;
 
-import java.util.List;
-
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,13 +15,17 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "produto")
 public class Produto {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String nome;
-	private Integer categoria;
 	
-	@Column(name = "sub_categoria")
-	private Integer subCategoria;
+	@ManyToOne
+	@JoinColumn(name = "categoria_id")
+	private Categoria categoria;
+	
+	@ManyToOne
+	@JoinColumn(name = "sub_categoria_id")
+	private SubCategoria subCategoria;
 	
 	@Column(columnDefinition = "TEXT")
 	private String descricao;
@@ -34,15 +35,15 @@ public class Produto {
 	@JsonIgnore
 	private Plano plano;
 	
-	@ElementCollection
-	private List<String> imagens;
+	@Column(name = "imagem", columnDefinition = "text")
+	private String imagem;
 
 	public Produto() {
 		super();
 	}
 	
-	public Produto(Long id, String nome, Integer categoria, Integer subCategoria, String descricao,
-			Plano plano, List<String> imagens) {
+	public Produto(Long id, String nome, Categoria categoria, SubCategoria subCategoria, String descricao,
+			Plano plano, String imagem) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -50,7 +51,7 @@ public class Produto {
 		this.subCategoria = subCategoria;
 		this.descricao = descricao;
 		this.plano = plano;
-		this.imagens = imagens;
+		this.imagem = imagem;
 	}
 
 	public Long getId() {
@@ -69,19 +70,19 @@ public class Produto {
 		this.nome = nome;
 	}
 
-	public Integer getCategoria() {
+	public Categoria getCategoria() {
 		return categoria;
 	}
 
-	public void setCategoria(Integer categoria) {
+	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
 	}
 
-	public Integer getSubCategoria() {
+	public SubCategoria getSubCategoria() {
 		return subCategoria;
 	}
 
-	public void setSubCategoria(Integer subCategoria) {
+	public void setSubCategoria(SubCategoria subCategoria) {
 		this.subCategoria = subCategoria;
 	}
 
@@ -101,18 +102,18 @@ public class Produto {
 		this.plano = plano;
 	}
 	
-	public List<String> getImagens() {
-		return imagens;
+	public String getImagem() {
+		return imagem;
 	}
 
-	public void setImagens(List<String> imagens) {
-		this.imagens = imagens;
+	public void setImagem(String imagem) {
+		this.imagem = imagem;
 	}
 
 	@Override
 	public String toString() {
 		return "Produto [id=" + id + ", nome=" + nome + ", categoria=" + categoria + ", subCategoria=" + subCategoria
-				+ ", descricao=" + descricao + ", plano=" + plano + ", imagens=" + imagens + "]";
+				+ ", descricao=" + descricao + ", plano=" + plano + ", imagem=" + imagem + "]";
 	}
 	
 }

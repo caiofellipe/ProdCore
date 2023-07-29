@@ -13,7 +13,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -36,7 +35,6 @@ public class Empresa {
 	private String logo;
 	
 	@OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	@JsonIgnore
 	private List<Plano> plano;
 	
 	public Empresa() {
@@ -98,6 +96,9 @@ public class Empresa {
 	}
 	public void setEndereco(Endereco endereco) {
 		this.endereco = endereco;
+		if(endereco != null) {
+			endereco.setEmpresa(this);
+		}
 	}
 	public String getLogo() {
 		return logo;

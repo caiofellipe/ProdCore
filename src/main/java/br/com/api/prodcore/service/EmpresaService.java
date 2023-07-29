@@ -8,9 +8,8 @@ import org.springframework.stereotype.Service;
 import br.com.api.prodcore.dto.EmpresaDTO;
 import br.com.api.prodcore.dto.mapper.EmpresaMapper;
 import br.com.api.prodcore.model.Empresa;
-import br.com.api.prodcore.model.Endereco;
-import br.com.api.prodcore.model.Usuario;
 import br.com.api.prodcore.repository.EmpresaRepository;
+import br.com.api.prodcore.repository.EnderecoRepository;
 import br.com.api.prodcore.repository.UsuarioRepository;
 
 @Service
@@ -19,23 +18,31 @@ public class EmpresaService {
 	private final EmpresaRepository empresaRepository;
 	private final EmpresaMapper empresaMapper;
 	private final UsuarioRepository usuarioRepository;
+	private final EnderecoRepository enderecoRepository;
 	
-	public EmpresaService(EmpresaRepository empresaRepository, EmpresaMapper empresaMapper, UsuarioRepository usuarioRepository) {
+	public EmpresaService(EmpresaRepository empresaRepository, EmpresaMapper empresaMapper, UsuarioRepository usuarioRepository, EnderecoRepository enderecoRepository) {
 		super();
 		this.empresaRepository = empresaRepository;
 		this.usuarioRepository = usuarioRepository;
+		this.enderecoRepository = enderecoRepository;
 		
 		this.empresaMapper = empresaMapper;
 	}
 	
 	public EmpresaDTO criarEmpresa(EmpresaDTO empresaDTO) {
-		Empresa empresa = empresaRepository.findByCnpj(empresaDTO.cnpj());
-		if(empresa != null) {
+		Empresa empresa = new Empresa();
+
+		if(empresaDTO.id()  != null) {
+			empresa = empresaRepository.findByCnpj(empresaDTO.cnpj());
 			return empresaMapper.toDTO(empresa);
 		}
 		empresa = empresaMapper.toEntity(empresaDTO);
-
-
+		
+		// TODO 1. Faça o cadastro de planos e produtos no front e back - TODO CORRIGIR ERRO AO SALVAR UM PRODUTO COM PLANO (modelo no postman)
+		// TODO 2. Teste o fluxo de cadastros de planos > produtos > vinculado a empresa
+		// TODO 3. Usuario pode selecionar plano cadastrado e vincular a seu perfil (pagamento fake)
+		// TODO 4. implemente cadastro de usuario e login (veja sobre o spring security no youtube)
+		// TODO 5. Implementar docker e encontrar uma hospedagem free para testar online
 		
 		return empresaMapper.toDTO(empresaRepository.save(empresa));
 	}
@@ -53,16 +60,13 @@ public class EmpresaService {
 	}
 	
 	public EmpresaDTO atualizarEmpresa(EmpresaDTO empresaDTO) {
-		Empresa empresa = empresaRepository.findById(empresaDTO.id()).orElseThrow();
+		empresaRepository.findById(empresaDTO.id()).orElseThrow();
 		
-		empresa.setNome(empresaDTO.nome());
-		empresa.setCnpj(empresaDTO.cnpj());
-		empresa.setEmail(empresaDTO.email());
-		empresa.setRamo(empresaDTO.ramo());
-		empresa.setTelefone(empresaDTO.telefone());
-		empresa.setEndereco(empresaDTO.endereco());
-		empresa.setLogo(empresaDTO.logo());
-		empresa.setPlanos(empresaDTO.plano());
+		Empresa empresa = empresaMapper.toEntity(empresaDTO);
+		
+		if(empresa.getEndereco() != null) {
+			enderecoRepository.save(empresa.getEndereco());
+		}
 		
 		return empresaMapper.toDTO(empresaRepository.save(empresa));
 	}
