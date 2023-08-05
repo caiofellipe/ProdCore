@@ -32,19 +32,22 @@ public class PlanoMapper {
 
 		Plano plano = new Plano();
 		
-		
 		if(planoDTO.id() != null){
 			plano.setId(planoDTO.id());
 		}
 		
 		plano.setNome(planoDTO.nome());
 		plano.setNivel(planoDTO.nivel());
-		plano.setProduto(planoDTO.produto());
-		
-		for(Produto produto: planoDTO.produto()) {
-			produto.setPlano(plano);
-		}
 
+		List<Produto> produtos = new ArrayList<>();
+		for(Produto produto: planoDTO.produto()) {
+			if(produto.getId() == null) {
+				produto.setPlano(plano);
+			}
+			produtos.add(produto);
+		}
+		plano.setProduto(produtos);
+		
 		return plano;
 	}
 	

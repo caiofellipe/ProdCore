@@ -9,23 +9,25 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "categoria")
 public class Categoria {
 
 		@Id
-		@GeneratedValue(strategy = GenerationType.IDENTITY)
-		private Long id;
+		private int id;
 		private String nome;
 		
 		@OneToMany(mappedBy = "categoria")
+		@JsonIgnore
 		private List<SubCategoria> subCategoria;
 		
-		public Long getId() {
+		public int getId() {
 			return id;
 		}
 		
-		public void setId(Long id) {
+		public void setId(int id) {
 			this.id = id;
 		}
 		

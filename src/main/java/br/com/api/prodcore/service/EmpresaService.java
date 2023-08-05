@@ -3,28 +3,37 @@ package br.com.api.prodcore.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.api.prodcore.dto.EmpresaDTO;
+import br.com.api.prodcore.dto.EnderecoDTO;
 import br.com.api.prodcore.dto.mapper.EmpresaMapper;
+import br.com.api.prodcore.dto.mapper.EnderecoMapper;
 import br.com.api.prodcore.model.Empresa;
+import br.com.api.prodcore.model.Endereco;
+import br.com.api.prodcore.model.Plano;
 import br.com.api.prodcore.repository.EmpresaRepository;
 import br.com.api.prodcore.repository.EnderecoRepository;
+import br.com.api.prodcore.repository.PlanoRepository;
 import br.com.api.prodcore.repository.UsuarioRepository;
 
 @Service
 public class EmpresaService {
 	
 	private final EmpresaRepository empresaRepository;
-	private final EmpresaMapper empresaMapper;
 	private final UsuarioRepository usuarioRepository;
 	private final EnderecoRepository enderecoRepository;
-	
-	public EmpresaService(EmpresaRepository empresaRepository, EmpresaMapper empresaMapper, UsuarioRepository usuarioRepository, EnderecoRepository enderecoRepository) {
+	private final PlanoRepository planoRepository;
+
+	private final EmpresaMapper empresaMapper;
+	public EmpresaService(EmpresaRepository empresaRepository, UsuarioRepository usuarioRepository, EnderecoRepository enderecoRepository,
+			PlanoRepository planoRepository, EmpresaMapper empresaMapper) {
 		super();
 		this.empresaRepository = empresaRepository;
 		this.usuarioRepository = usuarioRepository;
 		this.enderecoRepository = enderecoRepository;
+		this.planoRepository = planoRepository;
 		
 		this.empresaMapper = empresaMapper;
 	}
@@ -32,19 +41,33 @@ public class EmpresaService {
 	public EmpresaDTO criarEmpresa(EmpresaDTO empresaDTO) {
 		Empresa empresa = new Empresa();
 
-		if(empresaDTO.id()  != null) {
+		if(empresaDTO.id() != null) {
 			empresa = empresaRepository.findByCnpj(empresaDTO.cnpj());
 			return empresaMapper.toDTO(empresa);
 		}
-		empresa = empresaMapper.toEntity(empresaDTO);
 		
-		// TODO 1. Faça o cadastro de planos e produtos no front e back - TODO CORRIGIR ERRO AO SALVAR UM PRODUTO COM PLANO (modelo no postman)
+		empresa = empresaMapper.toEntity(empresaDTO);
+
+		Endereco endereco = empresaDTO.endereco();
+		if(endereco != null) {
+			empresa.setEndereco(endereco);
+			endereco.setEmpresa(empresa);
+		}
+
+		Empresa empresaSalva = empresaRepository.save(empresa);
+		
+		for(Plano plano: empresa.getPlanos()) {
+			if(plano.getId() == null) {
+				plano.setEmpresa(empresa);
+			}
+			planoRepository.save(plano);
+		}
 		// TODO 2. Teste o fluxo de cadastros de planos > produtos > vinculado a empresa
 		// TODO 3. Usuario pode selecionar plano cadastrado e vincular a seu perfil (pagamento fake)
 		// TODO 4. implemente cadastro de usuario e login (veja sobre o spring security no youtube)
 		// TODO 5. Implementar docker e encontrar uma hospedagem free para testar online
 		
-		return empresaMapper.toDTO(empresaRepository.save(empresa));
+		return empresaMapper.toDTO(empresaSalva);
 	}
 	
 	public EmpresaDTO procurarEmpresaPeloId(Long id) {
@@ -52,8 +75,8 @@ public class EmpresaService {
 				.map(empresaMapper::toDTO).orElseThrow();
 	}
 	
-	public List<EmpresaDTO> listarTodasEmpresas(){
-		return empresaRepository.findAll()
+	public List<EmpresaDTO> listarEmpresas(){
+		return empresaRepository.findAllEmpresa()
 				.stream()
 				.map(empresaMapper::toDTO)
 				.collect(Collectors.toList());

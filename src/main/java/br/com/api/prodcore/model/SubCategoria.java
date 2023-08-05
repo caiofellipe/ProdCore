@@ -12,8 +12,7 @@ import javax.persistence.Table;
 @Table(name = "subcategoria")
 public class SubCategoria {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     private String nome;
 
@@ -21,11 +20,11 @@ public class SubCategoria {
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
 
-	public Long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

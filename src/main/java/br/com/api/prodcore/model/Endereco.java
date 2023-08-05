@@ -27,7 +27,6 @@ public class Endereco {
     
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "empresa_id")
-    @JsonBackReference
     private Empresa empresa;
 
 	public Long getId() {

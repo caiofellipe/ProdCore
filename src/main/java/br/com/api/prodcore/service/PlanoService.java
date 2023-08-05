@@ -56,13 +56,17 @@ public class PlanoService {
 		}
 		
 		plano = planoMapper.toEntity(planoDTO);
-		empresa.getPlanos().add(plano);
-		plano.setEmpresa(empresa);
+
+		if(empresa != null) {
+			plano.setEmpresa(empresa);
+		}
 		
 		Plano planoSalvo = planoRepository.save(plano);
 		
 		for(Produto produto: plano.getProduto()) {
-			produto.setPlano(planoSalvo);
+			if(produto.getId() == null) {
+				produto.setPlano(plano);
+			}
 			produtoRepository.save(produto);
 		}
 		
@@ -74,7 +78,7 @@ public class PlanoService {
 				.map(planoMapper::toDTO).orElseThrow();
 	}
 	
-	public List<PlanoDTO> listarTodosPlanos(){
+	public List<PlanoDTO> listarPlanos(){
 		return planoRepository.findAll()
 				.stream()
 				.map(planoMapper::toDTO)

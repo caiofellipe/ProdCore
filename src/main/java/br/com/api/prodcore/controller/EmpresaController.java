@@ -25,7 +25,7 @@ public class EmpresaController{
 	
 	@GetMapping("/")
 	public List<EmpresaDTO> listarTodasEmpresas(){
-		return empresaService.listarTodasEmpresas();
+		return empresaService.listarEmpresas();
 	}
 	
 	@GetMapping("/{id}")

@@ -23,8 +23,8 @@ public class PlanoController{
 	private PlanoService planoService;
 	
 	@GetMapping("/")
-	public List<PlanoDTO> listarTodasPlanos(){
-		return planoService.listarTodosPlanos();
+	public List<PlanoDTO> listarPlanos(){
+		return planoService.listarPlanos();
 	}
 	
 	@GetMapping("/{id}")
