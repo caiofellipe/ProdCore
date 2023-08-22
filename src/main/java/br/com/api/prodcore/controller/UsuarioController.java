@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.api.prodcore.dto.UsuarioDTO;
+import br.com.api.prodcore.dto.UsuarioRolesDTO;
 import br.com.api.prodcore.service.UsuarioService;
 
 @RestController
@@ -35,16 +35,10 @@ public class UsuarioController {
 		return usuarioService.procurarUsuarioId(id);
 	}
 	
-	@GetMapping
-	@RequestMapping(value = "", method = RequestMethod.GET)
-	public ResponseEntity<UsuarioDTO> listarUsuario(@RequestParam("nome") String nome, @RequestParam("email") String email, @RequestParam("login") String login) {
-		return usuarioService.listarUsuario(nome, email, login);
-	}
-	
 	@PostMapping
 	@RequestMapping(value = "/cadastrar", method = RequestMethod.POST)
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public ResponseEntity<UsuarioDTO> criarUsuario(@RequestBody UsuarioDTO usuarioDTO){
+	public ResponseEntity<UsuarioDTO> criarUsuario(@RequestBody UsuarioDTO usuarioDTO) {
 		return ResponseEntity.ok(usuarioService.criarUsuario(usuarioDTO));
 	}
 	
@@ -54,6 +48,13 @@ public class UsuarioController {
 		return ResponseEntity.ok(usuarioService.atualizarUsuario(id, usuarioDTO));
 	}
 	
+
+	@PostMapping
+	@RequestMapping(value = "/role", method = RequestMethod.POST)
+	@ResponseStatus(code = HttpStatus.CREATED)
+	public ResponseEntity<UsuarioDTO> criarUsuarioRoles(@RequestBody UsuarioRolesDTO usuarioRolesDTO) throws Exception {
+		return ResponseEntity.ok(usuarioService.criarUsuarioRoles(usuarioRolesDTO));
+	}
 	
 	
 }

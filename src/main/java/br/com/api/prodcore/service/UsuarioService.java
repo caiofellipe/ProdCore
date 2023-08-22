@@ -1,42 +1,60 @@
 package br.com.api.prodcore.service;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import br.com.api.prodcore.dto.UsuarioDTO;
+import br.com.api.prodcore.dto.UsuarioRolesDTO;
 import br.com.api.prodcore.dto.mapper.UsuarioMapper;
+import br.com.api.prodcore.model.Role;
 import br.com.api.prodcore.model.Usuario;
+import br.com.api.prodcore.model.UserRoles;
+import br.com.api.prodcore.repository.RoleRepository;
 import br.com.api.prodcore.repository.UsuarioRepository;
 
 @Service
 public class UsuarioService {
 	
 	private final UsuarioRepository usuarioRepository;
+	private final RoleRepository roleRepository;
+	
 	private final UsuarioMapper usuarioMapper;
 
-	UsuarioService(UsuarioRepository usuarioRepository, UsuarioMapper usuarioMapper){
+	UsuarioService(UsuarioRepository usuarioRepository, RoleRepository roleRepository, UsuarioMapper usuarioMapper){
 		this.usuarioRepository = usuarioRepository;
+		this.roleRepository = roleRepository;
+
 		this.usuarioMapper = usuarioMapper;
 	}
 	
 	public UsuarioDTO criarUsuario(UsuarioDTO usuarioDTO) {
-		Usuario usuario = usuarioRepository.findByEmailOrLogin(usuarioDTO.email(),usuarioDTO.login());
-		if(usuario == null) {
-			usuario = usuarioMapper.toEntity(usuarioDTO);
-			usuario.setAtivo(true);
-			usuario.setDataCriado(new Date());
-			usuario.setDataAlterado(new Date());
-			usuario.setIdUsuario(UUID.randomUUID());
-			return usuarioMapper.toDTO(usuarioRepository.save(usuario));
+		Usuario usuario = usuarioRepository.findByEmail(usuarioDTO.email());
+
+		if(usuario != null) {
+			throw new Error("Usuario " +usuario.getNome()+ " já está cadastrado!");
+		}
+
+		usuario = usuarioMapper.toEntity(usuarioDTO);
+		
+		usuario.setAtivo(true);
+		
+		usuario.setDataCriado(LocalDateTime.now());
+		usuario.setDataAlterado(LocalDateTime.now());
+		
+		// TODO Somente em dev
+		if(usuario.getIdUsuarioConvite() == null) {
+			usuario.setIdUsuarioConvite(0L);
 		}
 		
-		return null;
+		usuario.setSenha(criptografaSenha().encode(usuario.getSenha()));
+		
+		return usuarioMapper.toDTO(usuarioRepository.save(usuario));
 	}
 	
 	public UsuarioDTO procurarUsuarioId(@PathVariable Long id) {
@@ -57,23 +75,42 @@ public class UsuarioService {
 				.orElseThrow(() -> new Exception("Usuario não encontrado"));
 			usuarioEncontrado.setId(usuarioDTO.id());
 			usuarioEncontrado.setNome(usuarioDTO.nome());
-			usuarioEncontrado.setSobrenome(usuarioDTO.sobrenome());
 			usuarioEncontrado.setEmail(usuarioDTO.email());
-			usuarioEncontrado.setLogin(usuarioDTO.login());
-			usuarioEncontrado.setIdUsuario(usuarioDTO.idUsuario());
 			usuarioEncontrado.setDataCriado(usuarioDTO.dataCriado());
-			usuarioEncontrado.setNivelUsuario(usuarioDTO.nivelUsuario());
 			
 			return usuarioMapper.toDTO(usuarioRepository.save(usuarioEncontrado));
 	}
+	
+	private BCryptPasswordEncoder criptografaSenha() {
+		return new BCryptPasswordEncoder();
+	}
 
-	public ResponseEntity<UsuarioDTO> listarUsuario(String nome, String email, String login) {
-		Usuario usuarioEncontrado = usuarioRepository.procuraUsuarioPorNomeOuEmailOuLogin(nome,email,login);
-		if(usuarioEncontrado != null) {
-			return ResponseEntity.ok().body(usuarioMapper.toDTO(usuarioEncontrado));
+	public UsuarioDTO criarUsuarioRoles(UsuarioRolesDTO usuarioRolesDTO) throws Exception {
+		List<Role> listRole = new ArrayList<>();
+		UserRoles usuarioRole = usuarioRepository.findUserRoles(usuarioRolesDTO.usuarioId(), usuarioRolesDTO.rolesId());
+		
+		if(usuarioRole != null) {
+			throw new Error("Este usuario já possui está role");
 		}
 		
-		return null;
+		Usuario usuario = usuarioRepository.findById(usuarioRolesDTO.usuarioId()).orElseThrow(() -> new Exception("Usuario não encontrado"));
+		Role role = roleRepository.findById(usuarioRolesDTO.rolesId()).get();
+
+		if(usuario == null) {
+			throw new Error("Usuario não encontrado!");
+		}
+		
+		if(role == null) {
+			throw new Error("Role não encontrada!");
+		}
+
+		listRole.add(role);
+		usuario.setRoles(listRole);
+
+		UsuarioDTO usuarioSalvoDTO = usuarioMapper.toDTO(usuarioRepository.save(usuario));
+		
+		return usuarioSalvoDTO;
+		
 	}
 	
 }

@@ -1,27 +1,24 @@
 package br.com.api.prodcore.dto;
 
-import java.util.Date;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import br.com.api.prodcore.model.NivelUsuario;
+import br.com.api.prodcore.model.Role;
 
 public record UsuarioDTO(
 	Long id,	
 	String nome,
-	String sobrenome,
-	String idUsuarioConvite,
+	Long idUsuarioConvite,
 	String email,
 	String senha,
-	String login,
-	UUID idUsuario,
 	boolean ativo,
 	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-	Date dataCriado,
+	LocalDateTime dataCriado,
 	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-	Date dataAlterado,
-	NivelUsuario nivelUsuario,
-	Long empresaId,
-	byte[] foto
+	LocalDateTime dataAlterado,
+	List<Role> roles,
+	//Long empresaId,
+	String foto
 ) {}

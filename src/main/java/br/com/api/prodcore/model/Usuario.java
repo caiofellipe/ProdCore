@@ -1,7 +1,8 @@
 package br.com.api.prodcore.model;
 
-import java.util.Date;
-import java.util.UUID;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,88 +10,75 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name = "usuario")
-@SequenceGenerator(name = "ID", sequenceName = "ID", allocationSize = 1, initialValue = 1)
 public class Usuario {
 	
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	@Column(name = "nome")
 	private String nome;
 	
-	@Column(name = "sobrenome")
-	private String sobrenome;
-	
 	@Column(name = "id_usuario_convite")
-	private String idUsuarioConvite;
+	private Long idUsuarioConvite;
 	
 	@Column(name = "email")
 	private String email;
 	
-	@Column(name = "login")
-	private String login;
-	
 	@Column(name = "senha")
 	private String senha;
-	
-	@Column(name = "id_usuario")
-	private UUID idUsuario;
 	
 	@Column(name = "ativo")
 	private boolean ativo;
 
-	@Temporal(TemporalType.TIMESTAMP)
+	//@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss[.S]")	
 	@Column(name = "data_criado")
-	private Date dataCriado;
+	private LocalDateTime dataCriado;
 	
-	@Temporal(TemporalType.TIMESTAMP)
+	//@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss[.S]")
 	@Column(name = "data_alterado")
-	private Date dataAlterado;
+	private LocalDateTime dataAlterado;
 	
-	@ManyToOne
-	@JoinColumn(name = "nivel_usuario_id")
-	private NivelUsuario nivelUsuario;
-	
+	@ManyToMany
+	@JoinTable(name = "user_roles",
+		joinColumns = @JoinColumn(name = "usuario_id"),
+		inverseJoinColumns = @JoinColumn(name = "role_id"))
+	private List<Role> roles;
+	/*
 	@OneToOne
 	@JoinColumn(name = "empresa_id")
 	private Empresa empresa;
-	
-	private byte[] foto;
+	*/
+	@Column(name = "foto", columnDefinition = "text")
+	private String foto;
 	
 	public Usuario() {} 
 	
-	public Usuario(Long id, String nome, String sobrenome, String idUsuarioConvite, String email, String login, String senha, UUID idUsuario, boolean ativo,
-			Date dataCriado, Date dataAlterado, NivelUsuario nivelUsuario, Empresa empresa, byte[] foto) {
+	public Usuario(Long id, String nome, Long idUsuarioConvite, String email, String senha, boolean ativo,
+			LocalDateTime dataCriado, LocalDateTime dataAlterado, List<Role> roles, /*Empresa empresa,*/ String foto) {
 		super();
 		this.id = id;
 		this.nome = nome;
-		this.sobrenome = sobrenome;
 		this.idUsuarioConvite = idUsuarioConvite;
 		this.email = email;
-		this.login = login;
 		this.senha = senha;
-		this.idUsuario = idUsuario;
 		this.ativo = ativo;
 		this.dataCriado = dataCriado;
 		this.dataAlterado = dataAlterado;
-		this.nivelUsuario = nivelUsuario;
-		this.empresa = empresa;
+		this.roles = roles;
+		//this.empresa = empresa;
 		this.foto = foto;
 	}
 	
@@ -108,24 +96,12 @@ public class Usuario {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	public String getSobrenome() {
-		return sobrenome;
-	}
-	public void setSobrenome(String sobrenome) {
-		this.sobrenome = sobrenome;
-	}
+
 	public String getEmail() {
 		return email;
 	}
 	public void setEmail(String email) {
 		this.email = email;
-	}
-	public String getLogin() {
-		return login;
-	}
-
-	public void setLogin(String login) {
-		this.login = login;
 	}
 
 	public String getSenha() {
@@ -136,12 +112,6 @@ public class Usuario {
 		this.senha = senha;
 	}
 
-	public UUID getIdUsuario() {
-		return idUsuario;
-	}
-	public void setIdUsuario(UUID idUsuario) {
-		this.idUsuario = idUsuario;
-	}
 	public boolean isAtivo() {
 		return ativo;
 	}
@@ -149,58 +119,50 @@ public class Usuario {
 		this.ativo = ativo;
 	}
 	
-	public Date getDataCriado() {
+	public LocalDateTime getDataCriado() {
 		return dataCriado;
 	}
 
-	public void setDataCriado(Date dataCriado) {
+	public void setDataCriado(LocalDateTime dataCriado) {
 		this.dataCriado = dataCriado;
 	}
 
-	public Date getDataAlterado() {
+	public LocalDateTime getDataAlterado() {
 		return dataAlterado;
 	}
 
-	public void setDataAlterado(Date dataAlterado) {
+	public void setDataAlterado(LocalDateTime dataAlterado) {
 		this.dataAlterado = dataAlterado;
 	}
 
-	public NivelUsuario getNivelUsuario() {
-		return nivelUsuario;
-	}
-	public void setNivelUsuario(NivelUsuario nivelUsuario) {
-		this.nivelUsuario = nivelUsuario;
-	}
-	
-	public Empresa getEmpresa() {
-		return empresa;
-	}
-	
-	public void setEmpresa(Empresa empresa) {
-		this.empresa = empresa;
-	}
-	
-	public String getIdUsuarioConvite() {
+	public Long getIdUsuarioConvite() {
 		return idUsuarioConvite;
 	}
 	
-	public void setIdUsuarioConvite(String idUsuarioConvite) {
+	public void setIdUsuarioConvite(Long idUsuarioConvite) {
 		this.idUsuarioConvite = idUsuarioConvite;
 	}
 	
-	public byte[] getFoto() {
+	public List<Role> getRoles() {
+		return roles;
+	}
+	
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
+	}
+	
+	public String getFoto() {
 		return foto;
 	}
 	
-	public void setFoto(byte[] foto) {
+	public void setFoto(String foto) {
 		this.foto = foto;
 	}
 
 	@Override
 	public String toString() {
-		return "Usuario [id=" + id + ", nome=" + nome + ", sobrenome=" + sobrenome + ", email=" + email + ", login="
-				+ login + ", senha=" + senha + ", idUsuario=" + idUsuario + ", ativo=" + ativo + ", dataCriado="
-				+ dataCriado + ", dataAlterado=" + dataAlterado + ", nivelUsuario=" + nivelUsuario + ", empresId=" + empresa + ", foto=" + foto +", idUsuarioConvite=" + idUsuarioConvite +"]";
+		return "Usuario [id=" + id + ", nome=" + nome + ", idUsuarioConvite=" + idUsuarioConvite +", email=" + email + ", senha=" + senha + ", ativo=" + ativo + ", dataCriado="
+				+ dataCriado + ", dataAlterado=" + dataAlterado + ", roles=" + roles.toArray() +", foto=" + foto +"]";
 	}
 
 }

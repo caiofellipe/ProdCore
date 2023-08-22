@@ -10,6 +10,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "endereco")
@@ -27,6 +28,7 @@ public class Endereco {
     
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "empresa_id")
+    @JsonIgnore
     private Empresa empresa;
 
 	public Long getId() {

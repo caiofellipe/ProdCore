@@ -15,15 +15,14 @@ public class UsuarioMapper {
 		}
 
 		return new UsuarioDTO(
-				usuario.getId(), usuario.getNome(), usuario.getSobrenome(), 
-				usuario.getIdUsuarioConvite(), usuario.getEmail(), usuario.getLogin(), usuario.getSenha(),
-				usuario.getIdUsuario(), usuario.isAtivo(), usuario.getDataCriado(),usuario.getDataAlterado(), 
-				usuario.getNivelUsuario(), usuario.getEmpresa().getId(), usuario.getFoto()
+				usuario.getId(), usuario.getNome(), usuario.getIdUsuarioConvite(), 
+				usuario.getEmail(), usuario.getSenha(), usuario.isAtivo(), 
+				usuario.getDataCriado(),usuario.getDataAlterado(), usuario.getRoles(), usuario.getFoto()
 				);
 	} 
 	
 	public Usuario toEntity(UsuarioDTO usuarioDTO) {
-		if(usuarioDTO == null) {
+		if(usuarioDTO == null) { 
 			return null;
 		}
 
@@ -33,19 +32,14 @@ public class UsuarioMapper {
 		if(usuarioDTO.id() != null){
 			usuario.setId(usuarioDTO.id());
 		}
-		
+		 
 		usuario.setNome(usuarioDTO.nome());
-		usuario.setSobrenome(usuarioDTO.sobrenome());
 		usuario.setEmail(usuarioDTO.email());
-		usuario.setLogin(usuarioDTO.login());
 		usuario.setSenha(usuarioDTO.senha());
-		usuario.setIdUsuario(usuarioDTO.idUsuario());
 		usuario.setAtivo(usuarioDTO.ativo());
 		usuario.setDataCriado(usuarioDTO.dataCriado());
-		usuario.setNivelUsuario(usuarioDTO.nivelUsuario());
-		
-		empresa.setId(usuarioDTO.empresaId());
-		usuario.setEmpresa(empresa);
+		usuario.setDataAlterado(usuarioDTO.dataAlterado());
+		usuario.setFoto(usuarioDTO.foto());
 		
 		return usuario;
 	}

@@ -3,13 +3,10 @@ package br.com.api.prodcore.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.api.prodcore.dto.EmpresaDTO;
-import br.com.api.prodcore.dto.EnderecoDTO;
 import br.com.api.prodcore.dto.mapper.EmpresaMapper;
-import br.com.api.prodcore.dto.mapper.EnderecoMapper;
 import br.com.api.prodcore.model.Empresa;
 import br.com.api.prodcore.model.Endereco;
 import br.com.api.prodcore.model.Plano;
@@ -62,11 +59,6 @@ public class EmpresaService {
 			}
 			planoRepository.save(plano);
 		}
-		// TODO 2. Teste o fluxo de cadastros de planos > produtos > vinculado a empresa
-		// TODO 3. Usuario pode selecionar plano cadastrado e vincular a seu perfil (pagamento fake)
-		// TODO 4. implemente cadastro de usuario e login (veja sobre o spring security no youtube)
-		// TODO 5. Implementar docker e encontrar uma hospedagem free para testar online
-		
 		return empresaMapper.toDTO(empresaSalva);
 	}
 	
