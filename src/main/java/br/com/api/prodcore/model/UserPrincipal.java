@@ -15,6 +15,7 @@ public class UserPrincipal implements UserDetails{
 	private String nome;
 	private String password;
 	private Collection<? extends GrantedAuthority> authorities;
+	private Usuario usuario;
 	
 	public UserPrincipal(Usuario usuario) {
 		this.nome = usuario.getRoles().get(usuario.getRoles().size() - 1).getNome();
@@ -28,6 +29,7 @@ public class UserPrincipal implements UserDetails{
 		}).collect(Collectors.toList());
 		
 		this.authorities = authorities;
+		setUsuario(usuario);
 				
 	}
 	
@@ -35,6 +37,14 @@ public class UserPrincipal implements UserDetails{
 		return new UserPrincipal(usuario);
 	}
 	
+	
+	public Usuario getUsuario() {
+		return usuario;
+	}
+	
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -48,7 +58,7 @@ public class UserPrincipal implements UserDetails{
 
 	@Override
 	public String getUsername() {
-		return nome;
+		return usuario.getEmail();
 	}
 
 	@Override
