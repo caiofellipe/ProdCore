@@ -34,7 +34,7 @@ public class UsuarioService {
 	}
 	
 	public UsuarioDTO criarUsuario(UsuarioDTO usuarioDTO) {
-		Usuario usuario = usuarioRepository.findByEmail(usuarioDTO.email());
+		Usuario usuario = usuarioRepository.findByUsuarioEmail(usuarioDTO.email());
 
 		if(usuario != null) {
 			throw new Error("Usuario " +usuario.getNome()+ " já está cadastrado!");

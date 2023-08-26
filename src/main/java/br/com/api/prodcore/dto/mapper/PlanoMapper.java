@@ -6,8 +6,6 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import br.com.api.prodcore.dto.PlanoDTO;
-import br.com.api.prodcore.dto.ProdutoDTO;
-import br.com.api.prodcore.model.Empresa;
 import br.com.api.prodcore.model.Plano;
 import br.com.api.prodcore.model.Produto;
 

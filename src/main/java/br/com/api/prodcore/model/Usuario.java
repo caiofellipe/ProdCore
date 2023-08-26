@@ -2,6 +2,7 @@ package br.com.api.prodcore.model;
 
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -14,11 +15,15 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name = "usuario")
-public class Usuario {
+public class Usuario implements UserDetails{
 	
 	private static final long serialVersionUID = 1L;
 
@@ -65,6 +70,12 @@ public class Usuario {
 	private String foto;
 	
 	public Usuario() {} 
+	
+	public Usuario(String email, String senha, Role role) {
+		this.email = email;
+		this.senha = senha;
+		this.roles.add(role);
+	} 
 	
 	public Usuario(Long id, String nome, Long idUsuarioConvite, String email, String senha, boolean ativo,
 			LocalDateTime dataCriado, LocalDateTime dataAlterado, List<Role> roles, /*Empresa empresa,*/ String foto) {
@@ -159,6 +170,54 @@ public class Usuario {
 		this.foto = foto;
 	}
 
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		for(Role role: roles) {
+			if(role.getNome().contains("ADMIN")) {
+				return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+			}else {
+				return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public String getPassword() {
+		// TODO Auto-generated method stub
+		return senha;
+	}
+
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return email;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	
 	@Override
 	public String toString() {
 		return "Usuario [id=" + id + ", nome=" + nome + ", idUsuarioConvite=" + idUsuarioConvite +", email=" + email + ", senha=" + senha + ", ativo=" + ativo + ", dataCriado="

@@ -1,49 +1,36 @@
 package br.com.api.prodcore.service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import br.com.api.prodcore.dto.PlanoDTO;
-import br.com.api.prodcore.dto.mapper.EmpresaMapper;
 import br.com.api.prodcore.dto.mapper.PlanoMapper;
-import br.com.api.prodcore.dto.mapper.ProdutoMapper;
-import br.com.api.prodcore.model.Categoria;
 import br.com.api.prodcore.model.Empresa;
 import br.com.api.prodcore.model.Plano;
 import br.com.api.prodcore.model.Produto;
-import br.com.api.prodcore.repository.CategoriaRepository;
 import br.com.api.prodcore.repository.EmpresaRepository;
 import br.com.api.prodcore.repository.PlanoRepository;
 import br.com.api.prodcore.repository.ProdutoRepository;
-import br.com.api.prodcore.repository.SubCategoriaRepository;
 
 @Service
 public class PlanoService {
 
 	private final PlanoRepository planoRepository;
 	private final EmpresaRepository empresaRepository;
-	private final CategoriaRepository categoriaRepository;
-	private final SubCategoriaRepository subCategoriaRepository;
 	
 	private final PlanoMapper planoMapper;
-	private final EmpresaMapper empresaMapper;
 	private final ProdutoRepository produtoRepository;
 	
 	public PlanoService(PlanoRepository planoRepository, PlanoMapper planoMapper, EmpresaRepository empresaRepository,
-			CategoriaRepository categoriaRepository, SubCategoriaRepository subCategoriaRepository, ProdutoRepository produtoRepository,
-			EmpresaMapper empresaMapper) {
+			ProdutoRepository produtoRepository) {
 		super();
 		this.planoRepository = planoRepository;
 		this.empresaRepository = empresaRepository;
-		this.categoriaRepository = categoriaRepository;
-		this.subCategoriaRepository = subCategoriaRepository;
 		this.produtoRepository = produtoRepository;
 
 		this.planoMapper = planoMapper;
-		this.empresaMapper = empresaMapper;
 	}
 	
 	public PlanoDTO criarPlano(PlanoDTO planoDTO) {

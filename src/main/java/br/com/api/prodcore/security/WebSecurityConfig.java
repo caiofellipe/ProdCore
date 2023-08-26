@@ -8,8 +8,11 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 import br.com.api.prodcore.service.CustomUserDetailsService;
 
 @EnableWebSecurity
@@ -18,18 +21,21 @@ public class WebSecurityConfig {
 	
 	@Autowired
 	CustomUserDetailsService customUserDetailsService;
+	@Autowired 
+	SecurityFilter securityFilter;
 	
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 		http.csrf().disable()
-			.authorizeHttpRequests()
+		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+		.and().authorizeHttpRequests()
 				.antMatchers("/api/usuario/cadastrar").permitAll()
 				.antMatchers("/api/auth/login").permitAll()
 				.antMatchers("/api/auth/cadastrar").permitAll()
-			.anyRequest().authenticated()
-		.and().httpBasic();
+		.anyRequest().authenticated();
 		
-		return http.build();
+		
+		return http.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class).build();
 	}
 	
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {

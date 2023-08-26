@@ -2,6 +2,7 @@ package br.com.api.prodcore.dto.mapper;
 
 import org.springframework.stereotype.Component;
 
+import br.com.api.prodcore.dto.CadastroUsuarioDTO;
 import br.com.api.prodcore.dto.UsuarioDTO;
 import br.com.api.prodcore.model.Empresa;
 import br.com.api.prodcore.model.Usuario;
@@ -40,6 +41,21 @@ public class UsuarioMapper {
 		usuario.setDataCriado(usuarioDTO.dataCriado());
 		usuario.setDataAlterado(usuarioDTO.dataAlterado());
 		usuario.setFoto(usuarioDTO.foto());
+		
+		return usuario;
+	}
+	
+	public Usuario toEntity(CadastroUsuarioDTO cadastroUsuarioDTO) {
+		if(cadastroUsuarioDTO == null) { 
+			return null;
+		}
+
+		Usuario usuario = new Usuario();
+		
+		usuario.setNome(cadastroUsuarioDTO.nome());
+		usuario.setEmail(cadastroUsuarioDTO.email());
+		usuario.setSenha(cadastroUsuarioDTO.senha());
+		usuario.setFoto(cadastroUsuarioDTO.foto());
 		
 		return usuario;
 	}

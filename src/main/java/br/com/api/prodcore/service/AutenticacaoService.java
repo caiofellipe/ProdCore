@@ -8,30 +8,52 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import br.com.api.prodcore.dto.CadastroUsuarioDTO;
+import br.com.api.prodcore.dto.TokenUsuarioDTO;
 import br.com.api.prodcore.dto.UsuarioAuthDTO;
 import br.com.api.prodcore.dto.UsuarioDTO;
+import br.com.api.prodcore.model.Usuario;
+import br.com.api.prodcore.repository.UsuarioRepository;
 
 @Service
 public class AutenticacaoService {
 
 	@Autowired
 	AuthenticationManager authenticationManager;
-	
 	@Autowired
 	CustomUserDetailsService customUserDetailsService;
+	@Autowired
+	UsuarioRepository usuarioRepository;
+	@Autowired
+	UsuarioService usuarioService;
+	@Autowired
+	TokenService tokenService;
 		
-	public UserDetails autenticacao(UsuarioAuthDTO usuarioAuthDTO) throws Exception {
+	public TokenUsuarioDTO autenticacao(UsuarioAuthDTO usuarioAuthDTO) throws Exception {
 		autentica(usuarioAuthDTO.email(), usuarioAuthDTO.senha());
 		
 		UserDetails userDetails = customUserDetailsService.loadUserByUsername(usuarioAuthDTO.email());
 		
-		return userDetails;
+		String token = tokenService.gerarToken((Usuario) userDetails);
+		
+		return new TokenUsuarioDTO(token, (Usuario) userDetails);
 	}
 
 
-	public UsuarioDTO cadastrar(UsuarioDTO usuarioDTO) {
-		// TODO Auto-generated method stub
-		return null;
+	public UsuarioDTO cadastrar(CadastroUsuarioDTO cadastroUsuarioDTO) {
+		Usuario usuario = usuarioRepository.findByUsuarioEmail(cadastroUsuarioDTO.email());
+		
+		if(usuario != null) {
+			throw new Error("Usuario já cadastrado com este email");
+		}
+		
+		UsuarioDTO usuarioDTO = usuarioService.criarUsuario(new UsuarioDTO(
+				null, cadastroUsuarioDTO.nome(), cadastroUsuarioDTO.idUsuarioConvite(), 
+				cadastroUsuarioDTO.email(), cadastroUsuarioDTO.senha(), true, null, null, 
+				null, cadastroUsuarioDTO.foto())
+				);
+		
+		return usuarioDTO;
 	}
 	
 	public String logout() {
@@ -50,4 +72,5 @@ public class AutenticacaoService {
 			throw new Exception("Credenciais Inválidas", e);
 		}
 	}
+	
 }
