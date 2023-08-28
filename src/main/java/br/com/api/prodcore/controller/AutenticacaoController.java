@@ -30,8 +30,4 @@ public class AutenticacaoController {
 		return ResponseEntity.ok(autenticacaoService.cadastrar(cadastroUsuarioDTO));
 	}
 	
-	@PostMapping("/logout")
-	public ResponseEntity<String> logout() {
-		return ResponseEntity.ok(autenticacaoService.logout());
-	}
 }

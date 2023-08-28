@@ -45,7 +45,6 @@ public class SecurityFilter extends OncePerRequestFilter{
 	
 	private String recuperaToken(HttpServletRequest request) {
 		String header = request.getHeader("Authorization");
-		
 		if(header == null) return null;
 		
 		return header.replace("Bearer ", "");

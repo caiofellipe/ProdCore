@@ -56,5 +56,10 @@ public class UsuarioController {
 		return ResponseEntity.ok(usuarioService.criarUsuarioRoles(usuarioRolesDTO));
 	}
 	
+	@GetMapping("/atual")
+	public ResponseEntity<UsuarioDTO> usuarioAtual() {
+		return ResponseEntity.ok(usuarioService.usuarioAtual());
+	}
+	
 	
 }

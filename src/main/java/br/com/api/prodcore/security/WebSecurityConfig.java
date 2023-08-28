@@ -32,7 +32,12 @@ public class WebSecurityConfig {
 				.antMatchers("/api/usuario/cadastrar").permitAll()
 				.antMatchers("/api/auth/login").permitAll()
 				.antMatchers("/api/auth/cadastrar").permitAll()
-		.anyRequest().authenticated();
+		.anyRequest().authenticated()
+		/*.and().logout()
+			.logoutUrl("/logout")
+			.logoutSuccessUrl("/login")
+			.invalidateHttpSession(true)
+			.deleteCookies("JSESSIONID")*/;
 		
 		
 		return http.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class).build();

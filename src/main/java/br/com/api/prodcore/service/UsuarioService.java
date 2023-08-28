@@ -2,9 +2,11 @@ package br.com.api.prodcore.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,8 +15,8 @@ import br.com.api.prodcore.dto.UsuarioDTO;
 import br.com.api.prodcore.dto.UsuarioRolesDTO;
 import br.com.api.prodcore.dto.mapper.UsuarioMapper;
 import br.com.api.prodcore.model.Role;
-import br.com.api.prodcore.model.Usuario;
 import br.com.api.prodcore.model.UserRoles;
+import br.com.api.prodcore.model.Usuario;
 import br.com.api.prodcore.repository.RoleRepository;
 import br.com.api.prodcore.repository.UsuarioRepository;
 
@@ -46,6 +48,10 @@ public class UsuarioService {
 		
 		usuario.setDataCriado(LocalDateTime.now());
 		usuario.setDataAlterado(LocalDateTime.now());
+		
+		List<Role> roleList = new ArrayList<Role>();
+		roleList.add(new Role(2L, "USER"));
+		usuario.setRoles(roleList);
 		
 		// TODO Somente em dev
 		if(usuario.getIdUsuarioConvite() == null) {
@@ -111,6 +117,11 @@ public class UsuarioService {
 		
 		return usuarioSalvoDTO;
 		
+	}
+
+	public UsuarioDTO usuarioAtual() {
+		Object usuario = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return usuarioMapper.toDTO((Usuario) usuario);
 	}
 	
 }

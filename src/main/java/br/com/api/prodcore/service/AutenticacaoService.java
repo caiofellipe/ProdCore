@@ -56,11 +56,6 @@ public class AutenticacaoService {
 		return usuarioDTO;
 	}
 	
-	public String logout() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 	private void autentica(String email, String senha) throws Exception {
 		try {
 			authenticationManager.authenticate(

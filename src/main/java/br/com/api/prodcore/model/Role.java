@@ -18,6 +18,11 @@ public class Role{
 		super();
 	}
 	
+	public Role(Long id, String nome) {
+		this.id = id;
+		this.nome = nome;
+	}
+	
 	public Long getId() {
 		return id;
 	}
