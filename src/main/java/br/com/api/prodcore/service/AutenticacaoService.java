@@ -12,6 +12,7 @@ import br.com.api.prodcore.dto.CadastroUsuarioDTO;
 import br.com.api.prodcore.dto.TokenUsuarioDTO;
 import br.com.api.prodcore.dto.UsuarioAuthDTO;
 import br.com.api.prodcore.dto.UsuarioDTO;
+import br.com.api.prodcore.exception.UsuarioException;
 import br.com.api.prodcore.model.Usuario;
 import br.com.api.prodcore.repository.UsuarioRepository;
 
@@ -62,9 +63,9 @@ public class AutenticacaoService {
 					new UsernamePasswordAuthenticationToken(email, senha)
 					);
 		} catch (DisabledException e) {
-			throw new Exception("Usuario desabilitado", e);
+			throw new UsuarioException("Usuario desabilitado", e);
 		}catch(BadCredentialsException e) {
-			throw new Exception("Credenciais Inválidas", e);
+			throw new UsuarioException("Credenciais Inválidas", e);
 		}
 	}
 	

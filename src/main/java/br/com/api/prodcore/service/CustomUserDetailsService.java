@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import br.com.api.prodcore.exception.UsuarioException;
 import br.com.api.prodcore.repository.UsuarioRepository;
 
 @Service
@@ -18,9 +19,8 @@ public class CustomUserDetailsService implements UserDetailsService{
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		UserDetails usuario = usuarioRepository.findByEmail(username);
-
 		if(usuario == null) {
-			throw new Error("Este usuario não está cadastrado!");
+			throw new UsuarioException("O usuario "+ username +" não está cadastrado!", new UsernameNotFoundException("Usuario não encontrado"));
 		}
 		
 		return usuario;
