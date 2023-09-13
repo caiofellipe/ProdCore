@@ -6,7 +6,9 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import br.com.api.prodcore.dto.EmpresaDTO;
+import br.com.api.prodcore.dto.EnderecoDTO;
 import br.com.api.prodcore.dto.mapper.EmpresaMapper;
+import br.com.api.prodcore.dto.mapper.EnderecoMapper;
 import br.com.api.prodcore.model.Empresa;
 import br.com.api.prodcore.model.Endereco;
 import br.com.api.prodcore.model.Plano;
@@ -24,8 +26,10 @@ public class EmpresaService {
 	private final PlanoRepository planoRepository;
 
 	private final EmpresaMapper empresaMapper;
+	private final EnderecoMapper enderecoMapper;
+	
 	public EmpresaService(EmpresaRepository empresaRepository, UsuarioRepository usuarioRepository, EnderecoRepository enderecoRepository,
-			PlanoRepository planoRepository, EmpresaMapper empresaMapper) {
+			PlanoRepository planoRepository, EmpresaMapper empresaMapper, EnderecoMapper enderecoMapper) {
 		super();
 		this.empresaRepository = empresaRepository;
 		this.usuarioRepository = usuarioRepository;
@@ -33,6 +37,7 @@ public class EmpresaService {
 		this.planoRepository = planoRepository;
 		
 		this.empresaMapper = empresaMapper;
+		this.enderecoMapper = enderecoMapper;
 	}
 	
 	public EmpresaDTO criarEmpresa(EmpresaDTO empresaDTO) {
@@ -84,5 +89,16 @@ public class EmpresaService {
 		}
 		
 		return empresaMapper.toDTO(empresaRepository.save(empresa));
+	}
+
+	public EmpresaDTO procurarEmpresaPorEstadoECidade(String uf, String cidade) {
+		List<Endereco> endereco = enderecoRepository.localizacaoEmpresa(uf, cidade);
+		
+		// TODO necessario retornar todas as empresas com o endereço pesquisado.
+		if(endereco.isEmpty()) {
+			
+		}
+		
+		return null;
 	}
 }

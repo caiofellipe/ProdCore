@@ -14,11 +14,11 @@ public class CustomUserDetailsService implements UserDetailsService{
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
-
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		UserDetails usuario = usuarioRepository.findByEmail(username);
+		
 		if(usuario == null) {
 			throw new UsuarioException("O usuario "+ username +" não está cadastrado!", new UsernameNotFoundException("Usuario não encontrado"));
 		}

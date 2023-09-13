@@ -30,4 +30,9 @@ public class AutenticacaoController {
 		return ResponseEntity.ok(autenticacaoService.cadastrar(cadastroUsuarioDTO));
 	}
 	
+	@PostMapping("/validaToken")
+	public ResponseEntity<String> validaToken(@RequestBody String token) throws Exception {
+		return ResponseEntity.ok(autenticacaoService.validarToken(token));
+	}
+	
 }

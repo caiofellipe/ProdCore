@@ -31,13 +31,12 @@ public class AutenticacaoService {
 	TokenService tokenService;
 		
 	public TokenUsuarioDTO autenticacao(UsuarioAuthDTO usuarioAuthDTO) throws Exception {
+		 
 		autentica(usuarioAuthDTO.email(), usuarioAuthDTO.senha());
 		
 		UserDetails userDetails = customUserDetailsService.loadUserByUsername(usuarioAuthDTO.email());
-		
-		String token = tokenService.gerarToken((Usuario) userDetails);
-		
-		return new TokenUsuarioDTO(token, (Usuario) userDetails);
+
+		return tokenService.gerarToken((Usuario) userDetails);
 	}
 
 
@@ -45,7 +44,7 @@ public class AutenticacaoService {
 		Usuario usuario = usuarioRepository.findByUsuarioEmail(cadastroUsuarioDTO.email());
 		
 		if(usuario != null) {
-			throw new Error("Usuario já cadastrado com este email");
+			throw new UsuarioException("Usuario já cadastrado com este email", null);
 		}
 		
 		UsuarioDTO usuarioDTO = usuarioService.criarUsuario(new UsuarioDTO(
@@ -67,6 +66,11 @@ public class AutenticacaoService {
 		}catch(BadCredentialsException e) {
 			throw new UsuarioException("Credenciais Inválidas", e);
 		}
+	}
+
+
+	public String validarToken(String token) throws Exception {
+		return tokenService.validaToken(token);
 	}
 	
 }

@@ -44,5 +44,10 @@ public class EmpresaController{
 		return empresaService.atualizarEmpresa(empresaDTO);
 	}
 	
+	@GetMapping("/localizacao/{uf}/{cidade}")
+	public EmpresaDTO listarEmpresaPeloId(@PathVariable String uf, @PathVariable String cidade) {
+		return empresaService.procurarEmpresaPorEstadoECidade(uf, cidade);
+	}
+	
 	
 }
