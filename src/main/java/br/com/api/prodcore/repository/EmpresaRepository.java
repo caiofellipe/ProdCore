@@ -14,8 +14,7 @@ public interface EmpresaRepository extends JpaRepository<Empresa, Long>{
 	
 	Empresa findByCnpj(String cnpj);
 	
-	@Query(value = "select distinct e.* from empresa e"
-			+ " inner join endereco en on en.empresa_id = e.id"
-			+ " inner join plano pl on pl.empresa_id  = e.id ", nativeQuery = true)
-	List<Empresa> findAllEmpresa();
+	@Query(value = "SELECT e.*, en.* FROM empresa e"
+			+ " INNER JOIN endereco en ON en.empresa_id = e.id", nativeQuery = true)
+	List<Empresa> todasEmpresasComEndereco();
 }

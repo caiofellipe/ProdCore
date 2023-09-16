@@ -45,7 +45,7 @@ public class EmpresaController{
 	}
 	
 	@GetMapping("/localizacao/{uf}/{cidade}")
-	public EmpresaDTO listarEmpresaPeloId(@PathVariable String uf, @PathVariable String cidade) {
+	public List<EmpresaDTO> listarEmpresaPeloId(@PathVariable String uf, @PathVariable String cidade) {
 		return empresaService.procurarEmpresaPorEstadoECidade(uf, cidade);
 	}
 	

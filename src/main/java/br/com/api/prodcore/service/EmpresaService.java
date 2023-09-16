@@ -1,5 +1,6 @@
 package br.com.api.prodcore.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -73,7 +74,7 @@ public class EmpresaService {
 	}
 	
 	public List<EmpresaDTO> listarEmpresas(){
-		return empresaRepository.findAllEmpresa()
+		return empresaRepository.todasEmpresasComEndereco()
 				.stream()
 				.map(empresaMapper::toDTO)
 				.collect(Collectors.toList());
@@ -91,14 +92,15 @@ public class EmpresaService {
 		return empresaMapper.toDTO(empresaRepository.save(empresa));
 	}
 
-	public EmpresaDTO procurarEmpresaPorEstadoECidade(String uf, String cidade) {
-		List<Endereco> endereco = enderecoRepository.localizacaoEmpresa(uf, cidade);
+	public List<EmpresaDTO> procurarEmpresaPorEstadoECidade(String uf, String cidade) {
+		List<EmpresaDTO> empresas = new ArrayList<>();
+		List<Endereco> enderecoEmpresas = enderecoRepository.localizacaoEmpresa(uf, cidade);
 		
-		// TODO necessario retornar todas as empresas com o endereço pesquisado.
-		if(endereco.isEmpty()) {
-			
+		
+		for(Endereco enderecoEmpresa: enderecoEmpresas) {
+			empresas.add(empresaMapper.toDTO(enderecoEmpresa.getEmpresa()));
 		}
 		
-		return null;
+		return empresas;
 	}
 }

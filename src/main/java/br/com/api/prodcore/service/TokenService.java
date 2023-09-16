@@ -54,8 +54,8 @@ public class TokenService {
 	}
 	
 	private Instant tempoExpiracaoToken() {
-		// Tempo de expiração do token é de 2h com Time zone pt-BR
-		return LocalDateTime.now().plusMinutes(2).toInstant(ZoneOffset.of("-03:00"));
+		// Tempo de expiração do token é de 5h com Time zone pt-BR
+		return LocalDateTime.now().plusHours(5).toInstant(ZoneOffset.of("-03:00"));
 	}
 	
 	private Instant tempoAtualCriacaoToken() {
