@@ -46,7 +46,7 @@ public class EmpresaService {
 		Empresa empresa = new Empresa();
 		empresa = empresaRepository.findByCnpj(empresaDTO.cnpj());
 
-		if(empresa.getCnpj() != null) {
+		if(empresa != null) {
 			throw new EmpresaException("Já existe uma empresa com este CNPJ.", null);
 		}
 		
