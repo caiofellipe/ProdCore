@@ -10,6 +10,7 @@ import br.com.api.prodcore.dto.EmpresaDTO;
 import br.com.api.prodcore.dto.EnderecoDTO;
 import br.com.api.prodcore.dto.mapper.EmpresaMapper;
 import br.com.api.prodcore.dto.mapper.EnderecoMapper;
+import br.com.api.prodcore.exception.EmpresaException;
 import br.com.api.prodcore.model.Empresa;
 import br.com.api.prodcore.model.Endereco;
 import br.com.api.prodcore.model.Plano;
@@ -43,10 +44,10 @@ public class EmpresaService {
 	
 	public EmpresaDTO criarEmpresa(EmpresaDTO empresaDTO) {
 		Empresa empresa = new Empresa();
+		empresa = empresaRepository.findByCnpj(empresaDTO.cnpj());
 
-		if(empresaDTO.id() != null) {
-			empresa = empresaRepository.findByCnpj(empresaDTO.cnpj());
-			return empresaMapper.toDTO(empresa);
+		if(empresa.getCnpj() != null) {
+			throw new EmpresaException("Já existe uma empresa com este CNPJ.", null);
 		}
 		
 		empresa = empresaMapper.toEntity(empresaDTO);
@@ -81,12 +82,19 @@ public class EmpresaService {
 	}
 	
 	public EmpresaDTO atualizarEmpresa(EmpresaDTO empresaDTO) {
-		empresaRepository.findById(empresaDTO.id()).orElseThrow();
+		Empresa empresa = new Empresa(); 
+		empresa = empresaRepository.findById(empresaDTO.id()).orElseThrow(() -> new EmpresaException("Empresa não encontrada.", null));
 		
-		Empresa empresa = empresaMapper.toEntity(empresaDTO);
+		if(empresa == null) {
+			throw new EmpresaException("Empresa não encontrada.", null);
+		}
 		
-		if(empresa.getEndereco() != null) {
-			enderecoRepository.save(empresa.getEndereco());
+		empresa = empresaMapper.toEntity(empresaDTO);
+		
+		Endereco endereco = empresaDTO.endereco();
+		if(endereco != null) {
+			empresa.setEndereco(endereco);
+			endereco.setEmpresa(empresa);
 		}
 		
 		return empresaMapper.toDTO(empresaRepository.save(empresa));
@@ -95,7 +103,6 @@ public class EmpresaService {
 	public List<EmpresaDTO> procurarEmpresaPorEstadoECidade(String uf, String cidade) {
 		List<EmpresaDTO> empresas = new ArrayList<>();
 		List<Endereco> enderecoEmpresas = enderecoRepository.localizacaoEmpresa(uf, cidade);
-		
 		
 		for(Endereco enderecoEmpresa: enderecoEmpresas) {
 			empresas.add(empresaMapper.toDTO(enderecoEmpresa.getEmpresa()));

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.api.prodcore.model.Role;
 
@@ -12,6 +13,7 @@ public record UsuarioDTO(
 	String nome,
 	Long idUsuarioConvite,
 	String email,
+	@JsonIgnore
 	String senha,
 	boolean ativo,
 	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
