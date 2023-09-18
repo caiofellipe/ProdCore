@@ -30,6 +30,7 @@ public class WebSecurityConfig {
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and().authorizeHttpRequests()
 				.antMatchers("/api/empresa/localizacao/{uf}/{cidade}").permitAll()
+				.antMatchers("/api/empresa/{id}").permitAll()
 				.antMatchers("/api/usuario/cadastrar").permitAll()
 				.antMatchers("/api/auth/login").permitAll()
 				.antMatchers("/api/auth/cadastrar").permitAll()

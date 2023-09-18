@@ -71,7 +71,7 @@ public class EmpresaService {
 	
 	public EmpresaDTO procurarEmpresaPeloId(Long id) {
 		return empresaRepository.findById(id)
-				.map(empresaMapper::toDTO).orElseThrow();
+				.map(empresaMapper::toDTO).orElseThrow(() -> new EmpresaException("Empresa não encontrada", null));
 	}
 	
 	public List<EmpresaDTO> listarEmpresas(){
