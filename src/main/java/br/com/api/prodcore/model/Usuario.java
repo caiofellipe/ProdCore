@@ -20,6 +20,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "usuario")
@@ -40,6 +41,7 @@ public class Usuario implements UserDetails{
 	private String email;
 	
 	@Column(name = "senha")
+	@JsonIgnore
 	private String senha;
 	
 	@Column(name = "ativo")
@@ -182,6 +184,7 @@ public class Usuario implements UserDetails{
 	}
 
 	@Override
+	@JsonIgnore
 	public String getPassword() {
 		// TODO Auto-generated method stub
 		return senha;
@@ -219,7 +222,7 @@ public class Usuario implements UserDetails{
 	
 	@Override
 	public String toString() {
-		return "Usuario [id=" + id + ", nome=" + nome + ", idUsuarioConvite=" + idUsuarioConvite +", email=" + email + ", senha=" + senha + ", ativo=" + ativo + ", dataCriado="
+		return "Usuario [id=" + id + ", nome=" + nome + ", idUsuarioConvite=" + idUsuarioConvite +", email=" + email + ", ativo=" + ativo + ", dataCriado="
 				+ dataCriado + ", dataAlterado=" + dataAlterado + ", roles=" + roles.toArray() +", foto=" + foto +"]";
 	}
 
