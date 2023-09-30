@@ -36,6 +36,7 @@ public class WebSecurityConfig {
 				.antMatchers("/api/auth/cadastrar").permitAll()
 				.antMatchers("/api/auth/validaToken").permitAll()
 				.antMatchers("/swagger-ui/**/**").permitAll()
+			//	.antMatchers("/api/plano-acesso/**").permitAll() // TODO remover para subir para produção
 				.antMatchers("/v3/**").permitAll()
 			.anyRequest().authenticated()
 		/*.and().logout()

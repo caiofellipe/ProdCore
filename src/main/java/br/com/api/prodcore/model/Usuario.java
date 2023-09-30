@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -67,8 +68,12 @@ public class Usuario implements UserDetails{
 	@JoinColumn(name = "empresa_id")
 	private Empresa empresa;
 	*/
+	
 	@Column(name = "foto", columnDefinition = "text")
 	private String foto;
+
+	@OneToOne(mappedBy = "usuario")
+	private PlanoAcesso planoAcesso;
 	
 	public Usuario() {} 
 	
@@ -79,7 +84,7 @@ public class Usuario implements UserDetails{
 	} 
 	
 	public Usuario(Long id, String nome, Long idUsuarioConvite, String email, String senha, boolean ativo,
-			LocalDateTime dataCriado, LocalDateTime dataAlterado, List<Role> roles, /*Empresa empresa,*/ String foto) {
+			LocalDateTime dataCriado, LocalDateTime dataAlterado, List<Role> roles, /*Empresa empresa,*/ String foto, PlanoAcesso planoAcesso) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -92,6 +97,7 @@ public class Usuario implements UserDetails{
 		this.roles = roles;
 		//this.empresa = empresa;
 		this.foto = foto;
+		this.planoAcesso = planoAcesso;
 	}
 	
 	public void setId(Long id) {
@@ -171,6 +177,14 @@ public class Usuario implements UserDetails{
 		this.foto = foto;
 	}
 
+	public PlanoAcesso getPlanoAcesso() {
+		return planoAcesso;
+	}
+	
+	public void setPlanoAcesso(PlanoAcesso planoAcesso) {
+		this.planoAcesso = planoAcesso;
+	}
+	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		for(Role role: roles) {
