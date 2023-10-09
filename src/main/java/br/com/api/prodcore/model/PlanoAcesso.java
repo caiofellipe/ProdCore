@@ -2,13 +2,17 @@ package br.com.api.prodcore.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -32,9 +36,8 @@ public class PlanoAcesso {
 	@Column(name = "data_editado")
 	private LocalDateTime dataEditado;
 	
-	@OneToOne
-	@JoinColumn(name = "usuario_id")
-	private Usuario usuario;
+	@OneToMany(mappedBy = "planoAcesso", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private List<Usuario> usuario;
 	
 	@OneToOne
 	@JoinColumn(name = "nivel_acesso_id")
@@ -71,10 +74,10 @@ public class PlanoAcesso {
 	public void setDataEditado(LocalDateTime dataEditado) {
 		this.dataEditado = dataEditado;
 	}
-	public Usuario getUsuario() {
+	public List<Usuario> getUsuario() {
 		return usuario;
 	}
-	public void setUsuario(Usuario usuario) {
+	public void setUsuario(List<Usuario> usuario) {
 		this.usuario = usuario;
 	}
 	public NivelAcesso getNivelAcesso() {

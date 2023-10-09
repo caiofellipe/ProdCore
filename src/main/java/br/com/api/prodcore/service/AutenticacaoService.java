@@ -1,5 +1,8 @@
 package br.com.api.prodcore.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -12,7 +15,9 @@ import br.com.api.prodcore.dto.CadastroUsuarioDTO;
 import br.com.api.prodcore.dto.TokenUsuarioDTO;
 import br.com.api.prodcore.dto.UsuarioAuthDTO;
 import br.com.api.prodcore.dto.UsuarioDTO;
+import br.com.api.prodcore.dto.mapper.UsuarioMapper;
 import br.com.api.prodcore.exception.UsuarioException;
+import br.com.api.prodcore.model.Role;
 import br.com.api.prodcore.model.Usuario;
 import br.com.api.prodcore.repository.UsuarioRepository;
 
@@ -28,8 +33,10 @@ public class AutenticacaoService {
 	@Autowired
 	UsuarioService usuarioService;
 	@Autowired
+	UsuarioMapper usuarioMapper;
+	@Autowired
 	TokenService tokenService;
-		
+	
 	public TokenUsuarioDTO autenticacao(UsuarioAuthDTO usuarioAuthDTO) throws Exception {
 		 
 		autentica(usuarioAuthDTO.email(), usuarioAuthDTO.senha());
@@ -42,18 +49,32 @@ public class AutenticacaoService {
 
 	public UsuarioDTO cadastrar(CadastroUsuarioDTO cadastroUsuarioDTO) {
 		Usuario usuario = usuarioRepository.findByUsuarioEmail(cadastroUsuarioDTO.email());
+		Usuario usuarioConvite = new Usuario();
 		
 		if(usuario != null) {
 			throw new UsuarioException("Usuario já cadastrado com este email", null);
 		}
 		
-		UsuarioDTO usuarioDTO = usuarioService.criarUsuario(new UsuarioDTO(
-				null, cadastroUsuarioDTO.nome(), cadastroUsuarioDTO.idUsuarioConvite(), 
-				cadastroUsuarioDTO.email(), cadastroUsuarioDTO.senha(), true, null, null, 
-				null, cadastroUsuarioDTO.foto())
-				);
+		usuarioConvite = usuarioRepository.findById(cadastroUsuarioDTO.idUsuarioConvite()).get();
 		
-		return usuarioDTO;
+		if(usuarioConvite == null) {
+			throw new UsuarioException("Seu convite é inválido", null);
+		}
+
+		usuario = usuarioMapper.toEntityCadastro(cadastroUsuarioDTO);
+		
+		
+		if(usuarioConvite.getIdUsuarioConvite() == null) {
+			usuario.setIdUsuarioConviteNv2(usuarioConvite.getIdUsuarioConvite());
+		}
+		
+		List<Role> roleList = new ArrayList<Role>();
+		roleList.add(new Role(2L, "USER"));
+		usuario.setRoles(roleList);
+		
+		usuario.setSenha(usuarioService.criptografaSenha().encode(usuario.getSenha()));
+		
+		return usuarioMapper.toDTO(usuarioRepository.save(usuario));
 	}
 	
 	private void autentica(String email, String senha) throws Exception {

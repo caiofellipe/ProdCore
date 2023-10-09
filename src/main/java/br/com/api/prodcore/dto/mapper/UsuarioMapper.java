@@ -1,5 +1,7 @@
 package br.com.api.prodcore.dto.mapper;
 
+import java.time.LocalDateTime;
+
 import org.springframework.stereotype.Component;
 
 import br.com.api.prodcore.dto.CadastroUsuarioDTO;
@@ -18,7 +20,7 @@ public class UsuarioMapper {
 		return new UsuarioDTO(
 				usuario.getId(), usuario.getNome(), usuario.getIdUsuarioConvite(), 
 				usuario.getEmail(), usuario.getSenha(), usuario.isAtivo(), 
-				usuario.getDataCriado(),usuario.getDataAlterado(), usuario.getRoles(), usuario.getFoto()
+				usuario.getDataCriado(),usuario.getDataAlterado(), usuario.getRoles(), usuario.getPlanoAcesso(), usuario.getEmpresa(), usuario.getFoto()
 				);
 	} 
 	
@@ -45,7 +47,7 @@ public class UsuarioMapper {
 		return usuario;
 	}
 	
-	public Usuario toEntity(CadastroUsuarioDTO cadastroUsuarioDTO) {
+	public Usuario toEntityCadastro(CadastroUsuarioDTO cadastroUsuarioDTO) {
 		if(cadastroUsuarioDTO == null) { 
 			return null;
 		}
@@ -56,6 +58,10 @@ public class UsuarioMapper {
 		usuario.setEmail(cadastroUsuarioDTO.email());
 		usuario.setSenha(cadastroUsuarioDTO.senha());
 		usuario.setFoto(cadastroUsuarioDTO.foto());
+		usuario.setIdUsuarioConvite(cadastroUsuarioDTO.idUsuarioConvite());
+		usuario.setAtivo(true);
+		usuario.setDataCriado(LocalDateTime.now());
+		usuario.setDataAlterado(LocalDateTime.now());
 		
 		return usuario;
 	}

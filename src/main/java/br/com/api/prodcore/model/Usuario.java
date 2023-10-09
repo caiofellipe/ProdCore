@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -38,6 +39,9 @@ public class Usuario implements UserDetails{
 	@Column(name = "id_usuario_convite")
 	private Long idUsuarioConvite;
 	
+	@Column(name = "id_usuario_convite_nv2")
+	private Long idUsuarioConviteNv2;
+	
 	@Column(name = "email")
 	private String email;
 	
@@ -63,16 +67,16 @@ public class Usuario implements UserDetails{
 		joinColumns = @JoinColumn(name = "usuario_id"),
 		inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private List<Role> roles;
-	/*
+
 	@OneToOne
 	@JoinColumn(name = "empresa_id")
 	private Empresa empresa;
-	*/
 	
 	@Column(name = "foto", columnDefinition = "text")
 	private String foto;
 
-	@OneToOne(mappedBy = "usuario")
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "plano_acesso_id")
 	private PlanoAcesso planoAcesso;
 	
 	public Usuario() {} 
@@ -83,19 +87,20 @@ public class Usuario implements UserDetails{
 		this.roles.add(role);
 	} 
 	
-	public Usuario(Long id, String nome, Long idUsuarioConvite, String email, String senha, boolean ativo,
-			LocalDateTime dataCriado, LocalDateTime dataAlterado, List<Role> roles, /*Empresa empresa,*/ String foto, PlanoAcesso planoAcesso) {
+	public Usuario(Long id, String nome, Long idUsuarioConvite, Long idUsuarioConviteNv2, String email, String senha, boolean ativo,
+			LocalDateTime dataCriado, LocalDateTime dataAlterado, List<Role> roles, Empresa empresa, String foto, PlanoAcesso planoAcesso) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.idUsuarioConvite = idUsuarioConvite;
+		this.idUsuarioConviteNv2 = idUsuarioConviteNv2;
 		this.email = email;
 		this.senha = senha;
 		this.ativo = ativo;
 		this.dataCriado = dataCriado;
 		this.dataAlterado = dataAlterado;
 		this.roles = roles;
-		//this.empresa = empresa;
+		this.empresa = empresa;
 		this.foto = foto;
 		this.planoAcesso = planoAcesso;
 	}
@@ -161,12 +166,28 @@ public class Usuario implements UserDetails{
 		this.idUsuarioConvite = idUsuarioConvite;
 	}
 	
+	public Long getIdUsuarioConviteNv2() {
+		return idUsuarioConviteNv2;
+	}
+	
+	public void setIdUsuarioConviteNv2(Long idUsuarioConviteNv2) {
+		this.idUsuarioConviteNv2 = idUsuarioConviteNv2;
+	}
+	
 	public List<Role> getRoles() {
 		return roles;
 	}
 	
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
+	}
+	
+	public Empresa getEmpresa() {
+		return empresa;
+	}
+	
+	public void setEmpresa(Empresa empresa) {
+		this.empresa = empresa;
 	}
 	
 	public String getFoto() {
@@ -236,7 +257,7 @@ public class Usuario implements UserDetails{
 	
 	@Override
 	public String toString() {
-		return "Usuario [id=" + id + ", nome=" + nome + ", idUsuarioConvite=" + idUsuarioConvite +", email=" + email + ", ativo=" + ativo + ", dataCriado="
+		return "Usuario [id=" + id + ", nome=" + nome + ", idUsuarioConvite=" + idUsuarioConvite + ", idUsuarioConviteNv2="+ idUsuarioConviteNv2 +", email=" + email + ", ativo=" + ativo + ", dataCriado="
 				+ dataCriado + ", dataAlterado=" + dataAlterado + ", roles=" + roles.toArray() +", foto=" + foto +"]";
 	}
 

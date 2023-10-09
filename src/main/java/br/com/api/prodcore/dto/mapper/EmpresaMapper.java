@@ -20,7 +20,7 @@ public class EmpresaMapper {
 		return new EmpresaDTO(
 				empresa.getId(), empresa.getNome(), empresa.getCnpj(), empresa.getEmail(), 
 				empresa.getRamo(), empresa.getTelefone(), empresa.getEndereco(), empresa.getLogo(), 
-				empresa.getPlanos()
+				empresa.getPlanos(), empresa.getUsuario()
 				);
 	}
 	

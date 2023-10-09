@@ -37,12 +37,16 @@ public class Empresa {
 	@OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<Plano> plano;
 	
+	@OneToOne(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	@JsonIgnore
+	private Usuario usuario;
+	
 	public Empresa() {
 		super();
 	}
 	
 	public Empresa(Long id, String nome, String cnpj, String email, String ramo, String telefone, Endereco endereco,
-			String logo, List<Plano> plano) {
+			String logo, List<Plano> plano, Usuario usuario) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -53,6 +57,7 @@ public class Empresa {
 		this.endereco = endereco;
 		this.logo = logo;
 		this.plano = plano;
+		this.usuario = usuario;
 	}
 	
 	public Long getId() {
@@ -111,6 +116,14 @@ public class Empresa {
 	}
 	public void setPlanos(List<Plano> plano) {
 		this.plano = plano;
+	}
+	
+	public Usuario getUsuario() {
+		return usuario;
+	}
+	
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 
 	@Override

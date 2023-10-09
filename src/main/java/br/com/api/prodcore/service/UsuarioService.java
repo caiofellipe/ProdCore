@@ -87,7 +87,7 @@ public class UsuarioService {
 			return usuarioMapper.toDTO(usuarioRepository.save(usuarioEncontrado));
 	}
 	
-	private BCryptPasswordEncoder criptografaSenha() {
+	public BCryptPasswordEncoder criptografaSenha() {
 		return new BCryptPasswordEncoder();
 	}
 

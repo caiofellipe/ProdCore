@@ -4,6 +4,7 @@ import java.util.List;
 
 import br.com.api.prodcore.model.Endereco;
 import br.com.api.prodcore.model.Plano;
+import br.com.api.prodcore.model.Usuario;
 
 public record EmpresaDTO (
 	Long id,
@@ -14,5 +15,6 @@ public record EmpresaDTO (
 	String telefone,
 	Endereco endereco,
 	String logo,
-	List<Plano> plano
+	List<Plano> plano,
+	Usuario usuario
 ){}
