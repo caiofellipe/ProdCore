@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 
 import br.com.api.prodcore.dto.CadastroUsuarioDTO;
 import br.com.api.prodcore.dto.UsuarioDTO;
-import br.com.api.prodcore.model.Empresa;
 import br.com.api.prodcore.model.Usuario;
 
 @Component
@@ -30,7 +29,6 @@ public class UsuarioMapper {
 		}
 
 		Usuario usuario = new Usuario();
-		Empresa empresa = new Empresa();
 		
 		if(usuarioDTO.id() != null){
 			usuario.setId(usuarioDTO.id());

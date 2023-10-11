@@ -1,8 +1,5 @@
 package br.com.api.prodcore.model;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -10,7 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -25,9 +21,6 @@ public class Plano {
 	private String nome;
 	private String nivel;
 	
-	@OneToMany(mappedBy = "plano", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Produto> produto;
-	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "empresa_id")
 	@JsonIgnore
@@ -37,12 +30,11 @@ public class Plano {
 		super();
 	}
 	
-	public Plano(Long id, String nome, String nivel, List<Produto> produto, Empresa empresa) {
+	public Plano(Long id, String nome, String nivel, Empresa empresa) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.nivel = nivel;
-		this.produto = produto;
 		this.empresa = empresa;
 	}
 
@@ -70,14 +62,6 @@ public class Plano {
 		this.nivel = nivel;
 	}
 
-	public List<Produto> getProduto() {
-		return produto;
-	}
-
-	public void setProduto(List<Produto> produto) {
-		this.produto = produto;
-	}
-
 	public Empresa getEmpresa() {
 		return empresa;
 	}
@@ -85,7 +69,5 @@ public class Plano {
 	public void setEmpresa(Empresa empresa) {
 		this.empresa = empresa;
 	}
-	
-	
 
 }

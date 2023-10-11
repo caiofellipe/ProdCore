@@ -9,7 +9,6 @@ import br.com.api.prodcore.dto.PlanoDTO;
 import br.com.api.prodcore.dto.mapper.PlanoMapper;
 import br.com.api.prodcore.model.Empresa;
 import br.com.api.prodcore.model.Plano;
-import br.com.api.prodcore.model.Produto;
 import br.com.api.prodcore.repository.EmpresaRepository;
 import br.com.api.prodcore.repository.PlanoRepository;
 import br.com.api.prodcore.repository.ProdutoRepository;
@@ -21,14 +20,12 @@ public class PlanoService {
 	private final EmpresaRepository empresaRepository;
 	
 	private final PlanoMapper planoMapper;
-	private final ProdutoRepository produtoRepository;
 	
 	public PlanoService(PlanoRepository planoRepository, PlanoMapper planoMapper, EmpresaRepository empresaRepository,
 			ProdutoRepository produtoRepository) {
 		super();
 		this.planoRepository = planoRepository;
 		this.empresaRepository = empresaRepository;
-		this.produtoRepository = produtoRepository;
 
 		this.planoMapper = planoMapper;
 	}
@@ -49,13 +46,6 @@ public class PlanoService {
 		}
 		
 		Plano planoSalvo = planoRepository.save(plano);
-		
-		for(Produto produto: plano.getProduto()) {
-			if(produto.getId() == null) {
-				produto.setPlano(plano);
-			}
-			produtoRepository.save(produto);
-		}
 		
 		return planoMapper.toDTO(planoSalvo);
 	}
@@ -78,7 +68,6 @@ public class PlanoService {
 		plano.setId(planoDTO.id());
 		plano.setNome(planoDTO.nome());
 		plano.setNivel(planoDTO.nivel());
-		plano.setProduto(planoDTO.produto());
 		
 		if(planoDTO.empresaId() == null) {
 			Empresa empresa = empresaRepository.findById(planoDTO.empresaId()).get();

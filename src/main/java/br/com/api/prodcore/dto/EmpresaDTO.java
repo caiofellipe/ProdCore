@@ -3,7 +3,7 @@ package br.com.api.prodcore.dto;
 import java.util.List;
 
 import br.com.api.prodcore.model.Endereco;
-import br.com.api.prodcore.model.Plano;
+import br.com.api.prodcore.model.Produto;
 import br.com.api.prodcore.model.Usuario;
 
 public record EmpresaDTO (
@@ -15,6 +15,6 @@ public record EmpresaDTO (
 	String telefone,
 	Endereco endereco,
 	String logo,
-	List<Plano> plano,
+	List<Produto> produto,
 	Usuario usuario
 ){}

@@ -1,5 +1,6 @@
 package br.com.api.prodcore.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -7,16 +8,16 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import br.com.api.prodcore.dto.EmpresaDTO;
-import br.com.api.prodcore.dto.EnderecoDTO;
 import br.com.api.prodcore.dto.mapper.EmpresaMapper;
-import br.com.api.prodcore.dto.mapper.EnderecoMapper;
 import br.com.api.prodcore.exception.EmpresaException;
+import br.com.api.prodcore.exception.UsuarioException;
 import br.com.api.prodcore.model.Empresa;
 import br.com.api.prodcore.model.Endereco;
-import br.com.api.prodcore.model.Plano;
+import br.com.api.prodcore.model.Produto;
+import br.com.api.prodcore.model.Usuario;
 import br.com.api.prodcore.repository.EmpresaRepository;
 import br.com.api.prodcore.repository.EnderecoRepository;
-import br.com.api.prodcore.repository.PlanoRepository;
+import br.com.api.prodcore.repository.ProdutoRepository;
 import br.com.api.prodcore.repository.UsuarioRepository;
 
 @Service
@@ -25,21 +26,19 @@ public class EmpresaService {
 	private final EmpresaRepository empresaRepository;
 	private final UsuarioRepository usuarioRepository;
 	private final EnderecoRepository enderecoRepository;
-	private final PlanoRepository planoRepository;
+	private final ProdutoRepository produtoRepository;
 
 	private final EmpresaMapper empresaMapper;
-	private final EnderecoMapper enderecoMapper;
 	
 	public EmpresaService(EmpresaRepository empresaRepository, UsuarioRepository usuarioRepository, EnderecoRepository enderecoRepository,
-			PlanoRepository planoRepository, EmpresaMapper empresaMapper, EnderecoMapper enderecoMapper) {
+			ProdutoRepository produtoRepository, EmpresaMapper empresaMapper) {
 		super();
 		this.empresaRepository = empresaRepository;
 		this.usuarioRepository = usuarioRepository;
 		this.enderecoRepository = enderecoRepository;
-		this.planoRepository = planoRepository;
+		this.produtoRepository = produtoRepository;
 		
 		this.empresaMapper = empresaMapper;
-		this.enderecoMapper = enderecoMapper;
 	}
 	
 	public EmpresaDTO criarEmpresa(EmpresaDTO empresaDTO) {
@@ -57,15 +56,24 @@ public class EmpresaService {
 			empresa.setEndereco(endereco);
 			endereco.setEmpresa(empresa);
 		}
+		
+		Usuario usuario = usuarioRepository.findById(empresaDTO.usuario().getId()).orElseThrow(() -> new UsuarioException("Usuario não encontrado!", null));
+		 
+		if(usuario != null) {
+			usuario.setEmpresa(empresa);
+			usuario.setDataAlterado(LocalDateTime.now());
+			empresa.setUsuario(usuario);
+		}
 
 		Empresa empresaSalva = empresaRepository.save(empresa);
 		
-		for(Plano plano: empresa.getPlanos()) {
-			if(plano.getId() == null) {
-				plano.setEmpresa(empresa);
+		for(Produto produto: empresa.getProduto()) {
+			if(produto.getId() == null) {
+				produto.setEmpresa(empresa);
 			}
-			planoRepository.save(plano);
+			produtoRepository.save(produto);
 		}
+		
 		return empresaMapper.toDTO(empresaSalva);
 	}
 	

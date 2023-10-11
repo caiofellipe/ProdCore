@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import br.com.api.prodcore.dto.EmpresaDTO;
 import br.com.api.prodcore.model.Empresa;
-import br.com.api.prodcore.model.Plano;
+import br.com.api.prodcore.model.Produto;
 
 @Component
 public class EmpresaMapper {
@@ -20,7 +20,7 @@ public class EmpresaMapper {
 		return new EmpresaDTO(
 				empresa.getId(), empresa.getNome(), empresa.getCnpj(), empresa.getEmail(), 
 				empresa.getRamo(), empresa.getTelefone(), empresa.getEndereco(), empresa.getLogo(), 
-				empresa.getPlanos(), empresa.getUsuario()
+				empresa.getProduto(), empresa.getUsuario()
 				);
 	}
 	
@@ -42,17 +42,17 @@ public class EmpresaMapper {
 		empresa.setTelefone(empresaDTO.telefone());
 		empresa.setLogo(empresaDTO.logo());
 		
-		List<Plano> planos = new ArrayList<Plano>();
-		if(empresaDTO.plano() != null) {
-			for(Plano plano: empresaDTO.plano()){
-				if(plano.getId() == null) {
-					plano.setEmpresa(empresa);
+		List<Produto> produtos = new ArrayList<Produto>();
+		if(empresaDTO.produto() != null) {
+			for(Produto produto: empresaDTO.produto()){
+				if(produto.getId() == null) {
+					produto.setEmpresa(empresa);
 				}
-				planos.add(plano);
+				produtos.add(produto);
 			}
 		}
 		
-		empresa.setPlanos(planos);
+		empresa.setProduto(produtos);
 		
 		return empresa;
 	}

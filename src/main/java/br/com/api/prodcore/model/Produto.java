@@ -31,9 +31,9 @@ public class Produto {
 	private String descricao;
 	
 	@ManyToOne
-	@JoinColumn(name = "plano_id")
+	@JoinColumn(name = "empresa_id")
 	@JsonIgnore
-	private Plano plano;
+	private Empresa empresa;
 	
 	@Column(name = "imagem", columnDefinition = "text")
 	private String imagem;
@@ -43,14 +43,14 @@ public class Produto {
 	}
 	
 	public Produto(Long id, String nome, Categoria categoria, SubCategoria subCategoria, String descricao,
-			Plano plano, String imagem) {
+			Empresa empresa, String imagem) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.categoria = categoria;
 		this.subCategoria = subCategoria;
 		this.descricao = descricao;
-		this.plano = plano;
+		this.empresa = empresa;
 		this.imagem = imagem;
 	}
 
@@ -94,12 +94,12 @@ public class Produto {
 		this.descricao = descricao;
 	}
 
-	public Plano getPlano() {
-		return plano;
+	public Empresa getEmpresa() {
+		return empresa;
 	}
 	
-	public void setPlano(Plano plano) {
-		this.plano = plano;
+	public void setEmpresa(Empresa empresa) {
+		this.empresa = empresa;
 	}
 	
 	public String getImagem() {
@@ -113,7 +113,7 @@ public class Produto {
 	@Override
 	public String toString() {
 		return "Produto [id=" + id + ", nome=" + nome + ", categoria=" + categoria + ", subCategoria=" + subCategoria
-				+ ", descricao=" + descricao + ", plano=" + plano + ", imagem=" + imagem + "]";
+				+ ", descricao=" + descricao + ", empresa=" + empresa + ", imagem=" + imagem + "]";
 	}
 	
 }

@@ -2,6 +2,7 @@ package br.com.api.prodcore.model;
 
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -23,6 +24,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import br.com.api.prodcore.config.GrantedAuthorityDeserializer;
 
 @Entity
 @Table(name = "usuario")
@@ -52,12 +56,10 @@ public class Usuario implements UserDetails{
 	@Column(name = "ativo")
 	private boolean ativo;
 
-	//@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss[.S]")	
 	@Column(name = "data_criado")
 	private LocalDateTime dataCriado;
 	
-	//@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss[.S]")
 	@Column(name = "data_alterado")
 	private LocalDateTime dataAlterado;
@@ -80,6 +82,10 @@ public class Usuario implements UserDetails{
 	private PlanoAcesso planoAcesso;
 	
 	public Usuario() {} 
+	
+	public Usuario(Role role) {
+		this.roles.add(role);
+	}
 	
 	public Usuario(String email, String senha, Role role) {
 		this.email = email;
@@ -206,16 +212,20 @@ public class Usuario implements UserDetails{
 		this.planoAcesso = planoAcesso;
 	}
 	
+	@JsonDeserialize(contentUsing = GrantedAuthorityDeserializer.class)
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
+		List<GrantedAuthority> authorities = new ArrayList<>();
+		
 		for(Role role: roles) {
 			if(role.getNome().contains("ADMIN")) {
-				return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+				authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+				authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
 			}else {
-				return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+				authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 			}
 		}
-		return null;
+		return authorities;
 	}
 
 	@Override

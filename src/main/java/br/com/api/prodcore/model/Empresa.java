@@ -35,7 +35,7 @@ public class Empresa {
 	private String logo;
 	
 	@OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private List<Plano> plano;
+	private List<Produto> produto;
 	
 	@OneToOne(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	@JsonIgnore
@@ -46,7 +46,7 @@ public class Empresa {
 	}
 	
 	public Empresa(Long id, String nome, String cnpj, String email, String ramo, String telefone, Endereco endereco,
-			String logo, List<Plano> plano, Usuario usuario) {
+			String logo, List<Produto> produto, Usuario usuario) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -56,7 +56,7 @@ public class Empresa {
 		this.telefone = telefone;
 		this.endereco = endereco;
 		this.logo = logo;
-		this.plano = plano;
+		this.produto = produto;
 		this.usuario = usuario;
 	}
 	
@@ -111,11 +111,11 @@ public class Empresa {
 	public void setLogo(String logo) {
 		this.logo = logo;
 	}
-	public List<Plano> getPlanos() {
-		return plano;
+	public List<Produto> getProduto() {
+		return produto;
 	}
-	public void setPlanos(List<Plano> plano) {
-		this.plano = plano;
+	public void setProduto(List<Produto> produto) {
+		this.produto = produto;
 	}
 	
 	public Usuario getUsuario() {
@@ -129,8 +129,8 @@ public class Empresa {
 	@Override
 	public String toString() {
 		return "Empresa [id=" + id + ", nome=" + nome + ", cnpj=" + cnpj + ", email=" + email + ", ramo=" + ramo
-				+ ", telefone=" + telefone + ", endereco=" + endereco + ", logo=" + logo + ", plano="
-				+ plano + "]";
+				+ ", telefone=" + telefone + ", endereco=" + endereco + ", logo=" + logo + ", produto="
+				+ produto + "]";
 	}
 
 }

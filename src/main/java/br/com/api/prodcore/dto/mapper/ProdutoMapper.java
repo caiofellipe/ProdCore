@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 
 import br.com.api.prodcore.dto.ProdutoDTO;
 import br.com.api.prodcore.model.Categoria;
-import br.com.api.prodcore.model.Plano;
+import br.com.api.prodcore.model.Empresa;
 import br.com.api.prodcore.model.Produto;
 import br.com.api.prodcore.model.SubCategoria;
 
@@ -17,7 +17,7 @@ public class ProdutoMapper {
 
 		return new ProdutoDTO(
 				produto.getId(), produto.getNome(), produto.getCategoria(),
-				produto.getSubCategoria(), produto.getDescricao(), produto.getPlano(),
+				produto.getSubCategoria(), produto.getDescricao(), produto.getEmpresa(),
 				produto.getImagem()
 				);
 	} 
@@ -39,9 +39,9 @@ public class ProdutoMapper {
 		produto.setDescricao(produtoDTO.descricao()); 
 		produto.setImagem(produtoDTO.imagem());
 		
-		Plano plano = produtoDTO.plano();
-		if(plano != null) {
-			produto.setPlano(plano);
+		Empresa empresa = produtoDTO.empresa();
+		if(empresa != null) {
+			produto.setEmpresa(empresa);
 		}
 		
 		Categoria categoria = produtoDTO.categoria();

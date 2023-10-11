@@ -57,8 +57,8 @@ public class UsuarioController {
 	}
 	
 	@GetMapping("/atual")
-	public ResponseEntity<UsuarioDTO> usuarioAtual() {
-		return ResponseEntity.ok(usuarioService.usuarioAtual());
+	public UsuarioDTO usuarioAtual() {
+		return usuarioService.usuarioAtual();
 	}
 	
 	

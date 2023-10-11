@@ -1,13 +1,9 @@
 package br.com.api.prodcore.dto.mapper;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.stereotype.Component;
 
 import br.com.api.prodcore.dto.PlanoDTO;
 import br.com.api.prodcore.model.Plano;
-import br.com.api.prodcore.model.Produto;
 
 @Component
 public class PlanoMapper {
@@ -19,7 +15,7 @@ public class PlanoMapper {
 
 		return new PlanoDTO(
 				plano.getId(), plano.getNome(), plano.getNivel(), 
-				plano.getProduto(), plano.getEmpresa().getId()
+				plano.getEmpresa().getId()
 				);
 	} 
 	
@@ -37,15 +33,6 @@ public class PlanoMapper {
 		plano.setNome(planoDTO.nome());
 		plano.setNivel(planoDTO.nivel());
 
-		List<Produto> produtos = new ArrayList<>();
-		for(Produto produto: planoDTO.produto()) {
-			if(produto.getId() == null) {
-				produto.setPlano(plano);
-			}
-			produtos.add(produto);
-		}
-		plano.setProduto(produtos);
-		
 		return plano;
 	}
 	

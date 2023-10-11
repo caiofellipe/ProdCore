@@ -1,7 +1,7 @@
 package br.com.api.prodcore.dto;
 
 import br.com.api.prodcore.model.Categoria;
-import br.com.api.prodcore.model.Plano;
+import br.com.api.prodcore.model.Empresa;
 import br.com.api.prodcore.model.SubCategoria;
 
 public record ProdutoDTO(
@@ -10,6 +10,6 @@ public record ProdutoDTO(
 	Categoria categoria,
 	SubCategoria subCategoria,
 	String descricao,
-	Plano plano,
+	Empresa empresa,
 	String imagem
 ) {}

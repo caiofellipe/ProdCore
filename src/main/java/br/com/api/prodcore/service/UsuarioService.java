@@ -2,10 +2,10 @@ package br.com.api.prodcore.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import br.com.api.prodcore.dto.UsuarioDTO;
 import br.com.api.prodcore.dto.UsuarioRolesDTO;
 import br.com.api.prodcore.dto.mapper.UsuarioMapper;
+import br.com.api.prodcore.exception.UsuarioException;
 import br.com.api.prodcore.model.Role;
 import br.com.api.prodcore.model.UserRoles;
 import br.com.api.prodcore.model.Usuario;
@@ -120,8 +121,16 @@ public class UsuarioService {
 	}
 
 	public UsuarioDTO usuarioAtual() {
-		Object usuario = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		return usuarioMapper.toDTO((Usuario) usuario);
+		Authentication usuarioAutenticado = SecurityContextHolder.getContext().getAuthentication();
+		
+		if(usuarioAutenticado == null) {
+			throw new UsuarioException("Usuario não autenticado", null);
+		}
+
+		Usuario usuario = new Usuario();
+		usuario = (Usuario) usuarioAutenticado.getPrincipal();
+		
+		return usuarioMapper.toDTO(usuario);
 	}
 	
 }
