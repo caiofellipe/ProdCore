@@ -9,15 +9,19 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import br.com.api.prodcore.dto.UsuarioDTO;
 import br.com.api.prodcore.dto.UsuarioRolesDTO;
 import br.com.api.prodcore.dto.mapper.UsuarioMapper;
+import br.com.api.prodcore.exception.EmpresaException;
 import br.com.api.prodcore.exception.UsuarioException;
+import br.com.api.prodcore.model.Empresa;
 import br.com.api.prodcore.model.Role;
 import br.com.api.prodcore.model.UserRoles;
 import br.com.api.prodcore.model.Usuario;
+import br.com.api.prodcore.repository.EmpresaRepository;
 import br.com.api.prodcore.repository.RoleRepository;
 import br.com.api.prodcore.repository.UsuarioRepository;
 
@@ -26,12 +30,14 @@ public class UsuarioService {
 	
 	private final UsuarioRepository usuarioRepository;
 	private final RoleRepository roleRepository;
+	private final EmpresaRepository empresaRepository;
 	
 	private final UsuarioMapper usuarioMapper;
 
-	UsuarioService(UsuarioRepository usuarioRepository, RoleRepository roleRepository, UsuarioMapper usuarioMapper){
+	UsuarioService(UsuarioRepository usuarioRepository, RoleRepository roleRepository, EmpresaRepository empresaRepository, UsuarioMapper usuarioMapper){
 		this.usuarioRepository = usuarioRepository;
 		this.roleRepository = roleRepository;
+		this.empresaRepository = empresaRepository;
 
 		this.usuarioMapper = usuarioMapper;
 	}
@@ -120,6 +126,7 @@ public class UsuarioService {
 		
 	}
 
+	@Transactional
 	public UsuarioDTO usuarioAtual() {
 		Authentication usuarioAutenticado = SecurityContextHolder.getContext().getAuthentication();
 		
@@ -129,6 +136,13 @@ public class UsuarioService {
 
 		Usuario usuario = new Usuario();
 		usuario = (Usuario) usuarioAutenticado.getPrincipal();
+		
+		Empresa empresa = new Empresa();
+		if(usuario.getEmpresa().getId() != null) {
+			empresa = empresaRepository.findById(usuario.getEmpresa().getId()).get();
+		}
+		
+		usuario.setEmpresa(empresa);
 		
 		return usuarioMapper.toDTO(usuario);
 	}
