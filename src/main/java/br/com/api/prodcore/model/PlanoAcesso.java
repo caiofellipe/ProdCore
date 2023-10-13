@@ -36,8 +36,11 @@ public class PlanoAcesso {
 	@Column(name = "data_editado")
 	private LocalDateTime dataEditado;
 	
-	@OneToMany(mappedBy = "planoAcesso", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "planoAcesso", cascade = CascadeType.ALL, orphanRemoval = false, fetch = FetchType.LAZY)
 	private List<Usuario> usuario;
+	
+	@Column(name = "editado_pelo_usuario_id")
+	private Long editadoPeloUsuarioId;
 	
 	@OneToOne
 	@JoinColumn(name = "nivel_acesso_id")
@@ -80,6 +83,15 @@ public class PlanoAcesso {
 	public void setUsuario(List<Usuario> usuario) {
 		this.usuario = usuario;
 	}
+	
+	public Long getEditadoPeloUsuarioId() {
+		return editadoPeloUsuarioId;
+	}
+	
+	public void setEditadoPeloUsuarioId(Long editadoPeloUsuarioId) {
+		this.editadoPeloUsuarioId = editadoPeloUsuarioId;
+	}
+	
 	public NivelAcesso getNivelAcesso() {
 		return nivelAcesso;
 	}

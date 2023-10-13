@@ -23,15 +23,18 @@ public class PlanoAcessoService {
 	private final PlanoAcessoRepository planoAcessoRepository;
 	private final NivelAcessoRepository nivelAcessoRepository;
 	private final BeneficioAcessoRepository beneficioAcessoRepository;
+	private final UsuarioService usuarioService;
 	
 	private final PlanoAcessoMapper planoAcessoMapper;
 
 	public PlanoAcessoService(PlanoAcessoRepository planoAcessoRepository, NivelAcessoRepository nivelAcessoRepository,
-			BeneficioAcessoRepository beneficioAcessoRepository, PlanoAcessoMapper planoAcessoMapper) {
+			BeneficioAcessoRepository beneficioAcessoRepository, PlanoAcessoMapper planoAcessoMapper, UsuarioService usuarioService) {
 		super();
 		this.planoAcessoRepository = planoAcessoRepository;
 		this.nivelAcessoRepository = nivelAcessoRepository;
 		this.beneficioAcessoRepository = beneficioAcessoRepository;
+		
+		this.usuarioService = usuarioService;
 		
 		this.planoAcessoMapper = planoAcessoMapper;
 	}
@@ -93,6 +96,8 @@ public class PlanoAcessoService {
 			nivelAcesso.setBeneficioAcesso(listBeneficios);
 			nivelAcessoRepository.save(nivelAcesso);
 		}
+		
+		planoAcesso.setEditadoPeloUsuarioId(usuarioService.usuarioAtual().id());
 		
 		planoAcesso.setNivelAcesso(nivelAcesso);
 		
