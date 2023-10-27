@@ -44,8 +44,8 @@ public class UsuarioController {
 	
 	@PutMapping("/{id}")
 	@RequestMapping(method = RequestMethod.PUT)
-	public ResponseEntity<UsuarioDTO> atualizarUsuario(@PathVariable Long id, @RequestBody UsuarioDTO usuarioDTO) throws Exception {
-		return ResponseEntity.ok(usuarioService.atualizarUsuario(id, usuarioDTO));
+	public ResponseEntity<UsuarioDTO> atualizarUsuario(@RequestBody UsuarioDTO usuarioDTO) throws Exception {
+		return ResponseEntity.ok(usuarioService.atualizarUsuario(usuarioDTO));
 	}
 	
 

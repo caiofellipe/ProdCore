@@ -16,12 +16,15 @@ import br.com.api.prodcore.dto.UsuarioDTO;
 import br.com.api.prodcore.dto.UsuarioRolesDTO;
 import br.com.api.prodcore.dto.mapper.UsuarioMapper;
 import br.com.api.prodcore.exception.EmpresaException;
+import br.com.api.prodcore.exception.PlanoAcessoException;
 import br.com.api.prodcore.exception.UsuarioException;
 import br.com.api.prodcore.model.Empresa;
+import br.com.api.prodcore.model.PlanoAcesso;
 import br.com.api.prodcore.model.Role;
 import br.com.api.prodcore.model.UserRoles;
 import br.com.api.prodcore.model.Usuario;
 import br.com.api.prodcore.repository.EmpresaRepository;
+import br.com.api.prodcore.repository.PlanoAcessoRepository;
 import br.com.api.prodcore.repository.RoleRepository;
 import br.com.api.prodcore.repository.UsuarioRepository;
 
@@ -31,13 +34,15 @@ public class UsuarioService {
 	private final UsuarioRepository usuarioRepository;
 	private final RoleRepository roleRepository;
 	private final EmpresaRepository empresaRepository;
+	private final PlanoAcessoRepository planoAcessoRepository;
 	
 	private final UsuarioMapper usuarioMapper;
 
-	UsuarioService(UsuarioRepository usuarioRepository, RoleRepository roleRepository, EmpresaRepository empresaRepository, UsuarioMapper usuarioMapper){
+	UsuarioService(UsuarioRepository usuarioRepository, RoleRepository roleRepository, EmpresaRepository empresaRepository, PlanoAcessoRepository planoAcessoRepository, UsuarioMapper usuarioMapper){
 		this.usuarioRepository = usuarioRepository;
 		this.roleRepository = roleRepository;
 		this.empresaRepository = empresaRepository;
+		this.planoAcessoRepository = planoAcessoRepository;
 
 		this.usuarioMapper = usuarioMapper;
 	}
@@ -74,6 +79,10 @@ public class UsuarioService {
 		return usuarioRepository.findById(id)
 				.map(usuarioMapper::toDTO).orElseThrow();
 	}
+	
+	public Usuario procurarUsuarioPorEmail(String email) {
+		return usuarioRepository.procuraUsuarioComEmpresaEPlano(email);
+	}
 
 	public List<UsuarioDTO> listaTodosUsuarios() {
 		return usuarioRepository.findAll()
@@ -83,15 +92,13 @@ public class UsuarioService {
 	
 	}
 
-	public UsuarioDTO atualizarUsuario(Long id, UsuarioDTO usuarioDTO) throws Exception {
-		Usuario usuarioEncontrado = usuarioRepository.findById(id)
+	public UsuarioDTO atualizarUsuario(UsuarioDTO usuarioDTO) throws Exception {
+		Usuario usuarioEncontrado = usuarioRepository.findById(usuarioDTO.id())
 				.orElseThrow(() -> new Exception("Usuario não encontrado"));
-			usuarioEncontrado.setId(usuarioDTO.id());
-			usuarioEncontrado.setNome(usuarioDTO.nome());
-			usuarioEncontrado.setEmail(usuarioDTO.email());
-			usuarioEncontrado.setDataCriado(usuarioDTO.dataCriado());
-			
-			return usuarioMapper.toDTO(usuarioRepository.save(usuarioEncontrado));
+		
+		usuarioEncontrado = usuarioMapper.toEntity(usuarioDTO);
+		
+		return usuarioMapper.toDTO(usuarioRepository.save(usuarioEncontrado));
 	}
 	
 	public BCryptPasswordEncoder criptografaSenha() {
@@ -138,13 +145,19 @@ public class UsuarioService {
 		usuario = (Usuario) usuarioAutenticado.getPrincipal();
 		
 		Empresa empresa = new Empresa();
-		if(usuario.getEmpresa().getId() != null) {
-			empresa = empresaRepository.findById(usuario.getEmpresa().getId()).get();
+		if(usuario.getEmpresa() != null) {
+			empresa = empresaRepository.findById(usuario.getEmpresa().getId()).orElseThrow(() -> new EmpresaException("Empresa não encontrada.", null));
+			usuario.setEmpresa(empresa);
 		}
 		
-		usuario.setEmpresa(empresa);
+		PlanoAcesso planoAcesso = new PlanoAcesso();
+		if(usuario.getPlanoAcesso() != null) {
+			planoAcesso = planoAcessoRepository.findById(usuario.getPlanoAcesso().getId()).orElseThrow(() -> new PlanoAcessoException("Plano de acesso não encontrado."));
+			usuario.setPlanoAcesso(planoAcesso);
+		}
 		
 		return usuarioMapper.toDTO(usuario);
 	}
 	
+
 }

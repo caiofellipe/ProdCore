@@ -17,7 +17,8 @@ public class PlanoAcessoMapper {
 		
 		return new PlanoAcessoDTO(
 				planoAcesso.getId(), planoAcesso.getNome(), planoAcesso.getDescricao(),
-				planoAcesso.getValor(), planoAcesso.getDataEditado(), planoAcesso.getNivelAcesso()
+				planoAcesso.getValor(), planoAcesso.getDataEditado(), planoAcesso.getUsuario(), 
+				planoAcesso.getNivelAcesso()
 				);
 		
 	}
@@ -37,6 +38,7 @@ public class PlanoAcessoMapper {
 		planoAcesso.setDescricao(planoAcessoDTO.descricao());
 		planoAcesso.setValor(planoAcessoDTO.valor());
 		planoAcesso.setDataEditado(LocalDateTime.now());
+		planoAcesso.setNivelAcesso(planoAcessoDTO.nivelAcesso());
 		return planoAcesso;
 		
 	}

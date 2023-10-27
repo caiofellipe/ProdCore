@@ -17,9 +17,9 @@ public class UsuarioMapper {
 		}
 
 		return new UsuarioDTO(
-				usuario.getId(), usuario.getNome(), usuario.getIdUsuarioConvite(), 
-				usuario.getEmail(), usuario.getSenha(), usuario.isAtivo(), 
-				usuario.getDataCriado(),usuario.getDataAlterado(), usuario.getRoles(), usuario.getPlanoAcesso(), usuario.getEmpresa(), usuario.getFoto()
+				usuario.getId(), usuario.getNome(), usuario.getIdUsuarioConvite(), usuario.getIdUsuarioConviteNv2(), 
+				usuario.getEmail(), usuario.getSenha(), usuario.isAtivo(), usuario.getDataCriado(),usuario.getDataAlterado(), 
+				usuario.getRoles(), usuario.getPlanoAcesso(), usuario.getEmpresa(), usuario.getFoto()
 				);
 	} 
 	
@@ -38,10 +38,13 @@ public class UsuarioMapper {
 		usuario.setEmail(usuarioDTO.email());
 		usuario.setSenha(usuarioDTO.senha());
 		usuario.setAtivo(usuarioDTO.ativo());
+		usuario.setIdUsuarioConvite(usuarioDTO.idUsuarioConvite());
+		usuario.setIdUsuarioConviteNv2(usuarioDTO.idUsuarioConviteNv2());
 		usuario.setDataCriado(usuarioDTO.dataCriado());
 		usuario.setDataAlterado(usuarioDTO.dataAlterado());
 		usuario.setFoto(usuarioDTO.foto());
-		
+		usuario.setEmpresa(usuarioDTO.empresa());
+		usuario.setPlanoAcesso(usuarioDTO.planoAcesso());
 		return usuario;
 	}
 	
@@ -57,6 +60,7 @@ public class UsuarioMapper {
 		usuario.setSenha(cadastroUsuarioDTO.senha());
 		usuario.setFoto(cadastroUsuarioDTO.foto());
 		usuario.setIdUsuarioConvite(cadastroUsuarioDTO.idUsuarioConvite());
+		usuario.setIdUsuarioConviteNv2(cadastroUsuarioDTO.idUsuarioConviteNv2());
 		usuario.setAtivo(true);
 		usuario.setDataCriado(LocalDateTime.now());
 		usuario.setDataAlterado(LocalDateTime.now());

@@ -12,11 +12,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "plano_acesso")
@@ -37,6 +39,7 @@ public class PlanoAcesso {
 	private LocalDateTime dataEditado;
 	
 	@OneToMany(mappedBy = "planoAcesso", cascade = CascadeType.ALL, orphanRemoval = false, fetch = FetchType.LAZY)
+	@JsonIgnore
 	private List<Usuario> usuario;
 	
 	@Column(name = "editado_pelo_usuario_id")
@@ -77,6 +80,7 @@ public class PlanoAcesso {
 	public void setDataEditado(LocalDateTime dataEditado) {
 		this.dataEditado = dataEditado;
 	}
+	
 	public List<Usuario> getUsuario() {
 		return usuario;
 	}

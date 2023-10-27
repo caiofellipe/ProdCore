@@ -14,6 +14,7 @@ public record UsuarioDTO(
 	Long id,	
 	String nome,
 	Long idUsuarioConvite,
+	Long idUsuarioConviteNv2,
 	String email,
 	@JsonIgnore
 	String senha,

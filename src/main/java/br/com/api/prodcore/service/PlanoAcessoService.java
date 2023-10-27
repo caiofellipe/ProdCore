@@ -7,15 +7,23 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import br.com.api.prodcore.dto.PlanoAcessoDTO;
+import br.com.api.prodcore.dto.UsuarioDTO;
 import br.com.api.prodcore.dto.mapper.PlanoAcessoMapper;
+import br.com.api.prodcore.dto.mapper.UsuarioMapper;
 import br.com.api.prodcore.exception.NivelAcessoException;
 import br.com.api.prodcore.exception.PlanoAcessoException;
+import br.com.api.prodcore.exception.UsuarioException;
 import br.com.api.prodcore.model.BeneficioAcesso;
 import br.com.api.prodcore.model.NivelAcesso;
 import br.com.api.prodcore.model.PlanoAcesso;
+import br.com.api.prodcore.model.Usuario;
+import br.com.api.prodcore.model.UsuarioPlanoAcesso;
 import br.com.api.prodcore.repository.BeneficioAcessoRepository;
 import br.com.api.prodcore.repository.NivelAcessoRepository;
 import br.com.api.prodcore.repository.PlanoAcessoRepository;
+import br.com.api.prodcore.repository.UsuarioPlanoAcessoRepository;
+import br.com.api.prodcore.repository.UsuarioRepository;
+import br.com.api.prodcore.util.UtilDatas;
 
 @Service
 public class PlanoAcessoService {
@@ -23,20 +31,30 @@ public class PlanoAcessoService {
 	private final PlanoAcessoRepository planoAcessoRepository;
 	private final NivelAcessoRepository nivelAcessoRepository;
 	private final BeneficioAcessoRepository beneficioAcessoRepository;
+	private final UsuarioRepository usuarioRepository;
+	private final UsuarioPlanoAcessoRepository usuarioPlanoAcessoRepository;
+	
 	private final UsuarioService usuarioService;
 	
 	private final PlanoAcessoMapper planoAcessoMapper;
+	private final UsuarioMapper usuarioMapper;
+	private UtilDatas util = new UtilDatas();
 
 	public PlanoAcessoService(PlanoAcessoRepository planoAcessoRepository, NivelAcessoRepository nivelAcessoRepository,
-			BeneficioAcessoRepository beneficioAcessoRepository, PlanoAcessoMapper planoAcessoMapper, UsuarioService usuarioService) {
+			BeneficioAcessoRepository beneficioAcessoRepository, UsuarioRepository usuarioRepository, 
+			UsuarioPlanoAcessoRepository usuarioPlanoAcessoRepository, UsuarioService usuarioService, 
+			PlanoAcessoMapper planoAcessoMapper,  UsuarioMapper usuarioMapper) {
 		super();
 		this.planoAcessoRepository = planoAcessoRepository;
 		this.nivelAcessoRepository = nivelAcessoRepository;
 		this.beneficioAcessoRepository = beneficioAcessoRepository;
+		this.usuarioRepository = usuarioRepository;
+		this.usuarioPlanoAcessoRepository = usuarioPlanoAcessoRepository;
 		
 		this.usuarioService = usuarioService;
 		
 		this.planoAcessoMapper = planoAcessoMapper;
+		this.usuarioMapper = usuarioMapper;
 	}
 	
 	public PlanoAcessoDTO criar(PlanoAcessoDTO planoAcessoDTO) {
@@ -105,4 +123,42 @@ public class PlanoAcessoService {
 		
 		return planoAcessoMapper.toDTO(planoAcesso);
 	}
+
+	public UsuarioDTO contratar(UsuarioDTO usuarioDTO) throws Exception {
+		int comparaDataPlano = 0;
+		Usuario usuario = new Usuario();
+		UsuarioPlanoAcesso usuarioPlanoAcesso = new UsuarioPlanoAcesso();
+		
+		PlanoAcesso planoAcesso = planoAcessoRepository.findById(usuarioDTO.planoAcesso().getId()).orElseThrow(() -> new PlanoAcessoException("Plano não encontrado"));
+		usuario = usuarioService.procurarUsuarioPorEmail(usuarioDTO.email());
+	
+		if(usuario == null) {
+			throw new UsuarioException("Usuario não encontrado", null);
+		}
+		
+		if(planoAcesso == null) {
+			throw new PlanoAcessoException("Plano de Acesso não encontrado");
+		}
+
+		if(usuario.getPlanoAcesso() != null) {
+			usuarioPlanoAcesso = usuarioPlanoAcessoRepository.pesquisaPorUsuarioIdEPlanoAcessoId(usuario.getId(), usuario.getPlanoAcesso().getId());
+			comparaDataPlano = usuarioPlanoAcesso.getDataExpiracao().compareTo(usuarioPlanoAcesso.getDataContratado());
+			
+			if(comparaDataPlano < 0) {
+				usuario.setPlanoAcesso(new PlanoAcesso());
+				throw new Exception("Plano de acesso está vencido! Contrate outro");
+			}
+		}
+
+		usuario.setPlanoAcesso(planoAcesso);
+
+		usuarioPlanoAcesso = new UsuarioPlanoAcesso(
+				usuario.getId(), planoAcesso.getId(), util.dataAtual(), util.expiracaoPlanoAcesso());
+		
+		usuario = usuarioRepository.save(usuario);
+		usuarioPlanoAcessoRepository.save(usuarioPlanoAcesso);
+		
+		return usuarioMapper.toDTO(usuario);
+	}
+	
 }

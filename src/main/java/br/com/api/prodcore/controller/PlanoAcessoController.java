@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.api.prodcore.dto.PlanoAcessoDTO;
+import br.com.api.prodcore.dto.UsuarioDTO;
 import br.com.api.prodcore.service.PlanoAcessoService;
 
 @RestController
@@ -39,4 +40,8 @@ public class PlanoAcessoController {
 		return ResponseEntity.ok(planoAcessoService.atualizar(planoAcessoDTO));
 	}
 	
+	@PostMapping("/contratar")
+	public ResponseEntity<UsuarioDTO> contratar(@RequestBody UsuarioDTO usuarioDTO) throws Exception{
+		return ResponseEntity.ok(planoAcessoService.contratar(usuarioDTO));
+	}
 }

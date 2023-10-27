@@ -20,4 +20,10 @@ public interface PlanoAcessoRepository extends JpaRepository<PlanoAcesso, Long>{
 			+ " JOIN FETCH pa.nivelAcesso na"
 			+ " JOIN FETCH na.beneficioAcesso ba")
 	List<PlanoAcesso> listarTodosNiveisDeAcessoComBeneficio();
+	
+	@Query(value = "SELECT pa FROM PlanoAcesso pa "
+			+ "JOIN FETCH pa.nivelAcesso "
+			+ "WHERE pa.id = :id")
+	PlanoAcesso pesquisaPorId(Long id);
+
 }

@@ -77,7 +77,7 @@ public class Usuario implements UserDetails{
 	@Column(name = "foto", columnDefinition = "text")
 	private String foto;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne
 	@JoinColumn(name = "plano_acesso_id")
 	private PlanoAcesso planoAcesso;
 	

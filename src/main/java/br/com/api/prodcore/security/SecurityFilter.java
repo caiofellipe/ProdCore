@@ -2,7 +2,6 @@ package br.com.api.prodcore.security;
 
 import java.io.IOException;
 
-import javax.naming.spi.Resolver;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

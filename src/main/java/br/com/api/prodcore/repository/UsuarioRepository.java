@@ -20,8 +20,12 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long>{
 	@Query(value = "select u from Usuario u JOIN FETCH u.roles where u.email = :email")
 	Usuario findByUseremailFetchRoles(String email);
 	
-	
 	@Query(value = "SELECT ur from UserRoles ur where ur.usuarioId = :usuarioId AND ur.rolesId = :roleId")
 	UserRoles findUserRoles(Long usuarioId, Long roleId);
 	
+	@Query(value = "SELECT u FROM Usuario u "
+			+ "JOIN FETCH u.roles "
+			+ "JOIN FETCH u.empresa "
+			+ "WHERE u.email = :email")
+	Usuario procuraUsuarioComEmpresaEPlano(String email);
 }
