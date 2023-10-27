@@ -10,4 +10,8 @@ public interface UsuarioPlanoAcessoRepository extends JpaRepository<UsuarioPlano
 	@Query(value = "SELECT upa FROM UsuarioPlanoAcesso upa "
 			+ "WHERE upa.usuarioId = :usuarioId AND upa.planoAcessoId = :planoAcessoId")
 	UsuarioPlanoAcesso pesquisaPorUsuarioIdEPlanoAcessoId(Long usuarioId, Long planoAcessoId);
+
+	@Query(value = "SELECT upa FROM UsuarioPlanoAcesso upa "
+			+ "WHERE upa.usuarioId = :usuarioId")
+	UsuarioPlanoAcesso pesquisaPlanoPeloIdUsuario(Long usuarioId);
 }

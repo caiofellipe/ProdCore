@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 
 import br.com.api.prodcore.dto.PlanoAcessoDTO;
 import br.com.api.prodcore.dto.UsuarioDTO;
+import br.com.api.prodcore.dto.UsuarioPlanoAcessoDTO;
 import br.com.api.prodcore.dto.mapper.PlanoAcessoMapper;
 import br.com.api.prodcore.dto.mapper.UsuarioMapper;
+import br.com.api.prodcore.dto.mapper.UsuarioPlanoAcessoMapper;
 import br.com.api.prodcore.exception.NivelAcessoException;
 import br.com.api.prodcore.exception.PlanoAcessoException;
 import br.com.api.prodcore.exception.UsuarioException;
@@ -38,12 +40,13 @@ public class PlanoAcessoService {
 	
 	private final PlanoAcessoMapper planoAcessoMapper;
 	private final UsuarioMapper usuarioMapper;
+	private final UsuarioPlanoAcessoMapper usuarioPlanoAcessoMapper;
 	private UtilDatas util = new UtilDatas();
 
 	public PlanoAcessoService(PlanoAcessoRepository planoAcessoRepository, NivelAcessoRepository nivelAcessoRepository,
 			BeneficioAcessoRepository beneficioAcessoRepository, UsuarioRepository usuarioRepository, 
 			UsuarioPlanoAcessoRepository usuarioPlanoAcessoRepository, UsuarioService usuarioService, 
-			PlanoAcessoMapper planoAcessoMapper,  UsuarioMapper usuarioMapper) {
+			PlanoAcessoMapper planoAcessoMapper,  UsuarioMapper usuarioMapper, UsuarioPlanoAcessoMapper usuarioPlanoAcessoMapper) {
 		super();
 		this.planoAcessoRepository = planoAcessoRepository;
 		this.nivelAcessoRepository = nivelAcessoRepository;
@@ -55,6 +58,7 @@ public class PlanoAcessoService {
 		
 		this.planoAcessoMapper = planoAcessoMapper;
 		this.usuarioMapper = usuarioMapper;
+		this.usuarioPlanoAcessoMapper = usuarioPlanoAcessoMapper;
 	}
 	
 	public PlanoAcessoDTO criar(PlanoAcessoDTO planoAcessoDTO) {
@@ -159,6 +163,18 @@ public class PlanoAcessoService {
 		usuarioPlanoAcessoRepository.save(usuarioPlanoAcesso);
 		
 		return usuarioMapper.toDTO(usuario);
+	}
+
+	public UsuarioPlanoAcessoDTO contratoAtual(Long usuarioId) throws Exception {
+		Usuario usuario = usuarioRepository.findById(usuarioId).orElseThrow(() -> new UsuarioException("Usuario não encontrado", null));
+		
+		UsuarioPlanoAcesso usuarioPlanoAcesso = usuarioPlanoAcessoRepository.pesquisaPlanoPeloIdUsuario(usuario.getId());
+		
+		if(usuarioPlanoAcesso == null) {
+			throw new Exception("Usuario não possui Plano de acesso.");
+		}
+		
+		return usuarioPlanoAcessoMapper.toDTO(usuarioPlanoAcesso);
 	}
 	
 }

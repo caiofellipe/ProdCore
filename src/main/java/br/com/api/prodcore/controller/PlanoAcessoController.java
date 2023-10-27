@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.api.prodcore.dto.PlanoAcessoDTO;
 import br.com.api.prodcore.dto.UsuarioDTO;
+import br.com.api.prodcore.dto.UsuarioPlanoAcessoDTO;
 import br.com.api.prodcore.service.PlanoAcessoService;
 
 @RestController
@@ -43,5 +45,11 @@ public class PlanoAcessoController {
 	@PostMapping("/contratar")
 	public ResponseEntity<UsuarioDTO> contratar(@RequestBody UsuarioDTO usuarioDTO) throws Exception{
 		return ResponseEntity.ok(planoAcessoService.contratar(usuarioDTO));
+	}
+	
+	@GetMapping("/contrato-atual/{usuarioId}")
+	public ResponseEntity<UsuarioPlanoAcessoDTO> contratoAtual(@PathVariable Long usuarioId) throws Exception{
+		return ResponseEntity.ok(planoAcessoService.contratoAtual(usuarioId));
+		
 	}
 }
