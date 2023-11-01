@@ -34,8 +34,8 @@ public class ProdutoController {
 	
 	@PostMapping("/cadastrar")
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public ProdutoDTO criarProduto(@RequestBody ProdutoDTO produtoDTO) {
-		return produtoService.criarProduto(produtoDTO);
+	public List<ProdutoDTO> criarProduto(@RequestBody List<ProdutoDTO> produtosDTO) {
+		return produtoService.cadastrarProdutos(produtosDTO);
 	}
 	
 	@PutMapping("/atualizar")

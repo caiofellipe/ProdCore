@@ -21,4 +21,5 @@ public interface EmpresaRepository extends JpaRepository<Empresa, Long>{
 	@Query(value = "SELECT e.*, p.* FROM empresa e"
 			+ " INNER JOIN produto p ON p.empresa_id = e.id", nativeQuery = true)
 	Empresa pesquisaEmpresaComSeusProdutos(Long id);
+	
 }

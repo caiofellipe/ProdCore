@@ -1,13 +1,15 @@
 package br.com.api.prodcore.service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import br.com.api.prodcore.dto.ProdutoDTO;
 import br.com.api.prodcore.dto.mapper.ProdutoMapper;
+import br.com.api.prodcore.exception.EmpresaException;
+import br.com.api.prodcore.exception.ProdutoException;
 import br.com.api.prodcore.model.Empresa;
 import br.com.api.prodcore.model.Produto;
 import br.com.api.prodcore.repository.EmpresaRepository;
@@ -27,14 +29,23 @@ public class ProdutoService {
 		this.empresaRepository = empresaRepository;
 	}
 	
-	public ProdutoDTO criarProduto(ProdutoDTO produtoDTO) {
-		Optional<Produto> produto = produtoRepository.findById(produtoDTO.id());
-		
-		if(produto.isPresent()) {
-			return produtoMapper.toDTO(produto.get());
+	public List<ProdutoDTO> cadastrarProdutos(List<ProdutoDTO> produtosDTO) {
+		Produto produto = new Produto();
+		List<ProdutoDTO> listProdutos = new ArrayList<ProdutoDTO>();
+
+		 
+		for(ProdutoDTO produtoDTO: produtosDTO) {
+			if(produtoDTO.id() != null) {
+				produto = produtoRepository.findById(produtoDTO.id()).orElseThrow(() -> new ProdutoException("Produto já cadastrado"));
+			}
+			
+			produto = produtoMapper.toEntity(produtoDTO);
+			produtoRepository.save(produto);
+			listProdutos.add(produtoMapper.toDTO(produto));
+			
 		}
 		
-		return produtoMapper.toDTO(produtoRepository.save(produto.get()));
+		return listProdutos;
 	}
 	
 	public ProdutoDTO procurarProdutoPeloId(Long id) {
@@ -50,14 +61,12 @@ public class ProdutoService {
 	}
 	
 	public ProdutoDTO atualizarProduto(ProdutoDTO produtoDTO) {
-		Produto produto = produtoRepository.findById(produtoDTO.id()).orElseThrow();
-		Empresa empresa = empresaRepository.findById(produtoDTO.empresa().getId()).get();
+		Produto produto = produtoRepository.findById(produtoDTO.id()).orElseThrow(() -> new ProdutoException("Produto não encontrado."));
+		Empresa empresa = empresaRepository.findById(produto.getEmpresa().getId()).orElseThrow(() -> new EmpresaException("Empresa não encontrada.", null));
 		
-		produto.setId(produtoDTO.id()); 
-		produto.setNome(produtoDTO.nome());
-		produto.setDescricao(produtoDTO.descricao()); 
+		produto = produtoMapper.toEntity(produtoDTO);
+		
 		produto.setEmpresa(empresa);
-		produto.setImagem(produtoDTO.imagem());
 		
 		return produtoMapper.toDTO(produtoRepository.save(produto));
 	}
