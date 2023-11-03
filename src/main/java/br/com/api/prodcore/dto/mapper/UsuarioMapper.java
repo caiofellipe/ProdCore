@@ -19,7 +19,7 @@ public class UsuarioMapper {
 		return new UsuarioDTO(
 				usuario.getId(), usuario.getNome(), usuario.getIdUsuarioConvite(), usuario.getIdUsuarioConviteNv2(), 
 				usuario.getEmail(), usuario.getSenha(), usuario.isAtivo(), usuario.getDataCriado(),usuario.getDataAlterado(), 
-				usuario.getRoles(), usuario.getPlanoAcesso(), usuario.getEmpresa(), usuario.getFoto()
+				usuario.getRole(), usuario.getPlanoAcesso(), usuario.getEmpresa(), usuario.getFoto()
 				);
 	} 
 	

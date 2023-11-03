@@ -1,7 +1,6 @@
 package br.com.api.prodcore.service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,9 +60,7 @@ public class UsuarioService {
 		usuario.setDataCriado(LocalDateTime.now());
 		usuario.setDataAlterado(LocalDateTime.now());
 		
-		List<Role> roleList = new ArrayList<Role>();
-		roleList.add(new Role(2L, "USER"));
-		usuario.setRoles(roleList);
+		usuario.setRole(new Role(2L, "USER"));
 		
 		// TODO Somente em dev
 		if(usuario.getIdUsuarioConvite() == null) {
@@ -106,7 +103,6 @@ public class UsuarioService {
 	}
 
 	public UsuarioDTO criarUsuarioRoles(UsuarioRolesDTO usuarioRolesDTO) throws Exception {
-		List<Role> listRole = new ArrayList<>();
 		UserRoles usuarioRole = usuarioRepository.findUserRoles(usuarioRolesDTO.usuarioId(), usuarioRolesDTO.rolesId());
 		
 		if(usuarioRole != null) {
@@ -124,8 +120,7 @@ public class UsuarioService {
 			throw new Error("Role não encontrada!");
 		}
 
-		listRole.add(role);
-		usuario.setRoles(listRole);
+		usuario.setRole(role);
 
 		UsuarioDTO usuarioSalvoDTO = usuarioMapper.toDTO(usuarioRepository.save(usuario));
 		

@@ -1,8 +1,5 @@
 package br.com.api.prodcore.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -68,9 +65,7 @@ public class AutenticacaoService {
 			usuario.setIdUsuarioConviteNv2(usuarioConvite.getIdUsuarioConvite());
 		}
 		
-		List<Role> roleList = new ArrayList<Role>();
-		roleList.add(new Role(2L, "USER"));
-		usuario.setRoles(roleList);
+		usuario.setRole(new Role(2L, "USER"));
 		
 		usuario.setSenha(usuarioService.criptografaSenha().encode(usuario.getSenha()));
 		

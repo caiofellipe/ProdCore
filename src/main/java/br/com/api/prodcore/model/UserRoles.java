@@ -17,7 +17,7 @@ public class UserRoles {
 	private Long usuarioId;
 	
 	@Column(name = "role_id")
-	private Long rolesId;
+	private Long roleId;
 	
 	public Long getUsuarioId() {
 		return usuarioId;
@@ -25,11 +25,11 @@ public class UserRoles {
 	public void setUsuarioId(Long usuarioId) {
 		this.usuarioId = usuarioId;
 	}
-	public Long getRolesId() {
-		return rolesId;
+	public Long getRoleId() {
+		return roleId;
 	}
-	public void setRolesId(Long rolesId) {
-		this.rolesId = rolesId;
+	public void setRoleId(Long roleId) {
+		this.roleId = roleId;
 	}
 	
 }

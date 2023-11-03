@@ -8,13 +8,11 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -64,11 +62,11 @@ public class Usuario implements UserDetails{
 	@Column(name = "data_alterado")
 	private LocalDateTime dataAlterado;
 	
-	@ManyToMany
+	@OneToOne
 	@JoinTable(name = "user_roles",
 		joinColumns = @JoinColumn(name = "usuario_id"),
 		inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private List<Role> roles;
+	private Role role;
 
 	@OneToOne
 	@JoinColumn(name = "empresa_id")
@@ -84,17 +82,17 @@ public class Usuario implements UserDetails{
 	public Usuario() {} 
 	
 	public Usuario(Role role) {
-		this.roles.add(role);
+		this.role  = role;
 	}
 	
 	public Usuario(String email, String senha, Role role) {
 		this.email = email;
 		this.senha = senha;
-		this.roles.add(role);
+		this.role = role;
 	} 
 	
 	public Usuario(Long id, String nome, Long idUsuarioConvite, Long idUsuarioConviteNv2, String email, String senha, boolean ativo,
-			LocalDateTime dataCriado, LocalDateTime dataAlterado, List<Role> roles, Empresa empresa, String foto, PlanoAcesso planoAcesso) {
+			LocalDateTime dataCriado, LocalDateTime dataAlterado, Role role, Empresa empresa, String foto, PlanoAcesso planoAcesso) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -105,7 +103,7 @@ public class Usuario implements UserDetails{
 		this.ativo = ativo;
 		this.dataCriado = dataCriado;
 		this.dataAlterado = dataAlterado;
-		this.roles = roles;
+		this.role = role;
 		this.empresa = empresa;
 		this.foto = foto;
 		this.planoAcesso = planoAcesso;
@@ -180,12 +178,12 @@ public class Usuario implements UserDetails{
 		this.idUsuarioConviteNv2 = idUsuarioConviteNv2;
 	}
 	
-	public List<Role> getRoles() {
-		return roles;
+	public Role getRole() {
+		return role;
 	}
 	
-	public void setRoles(List<Role> roles) {
-		this.roles = roles;
+	public void setRole(Role role) {
+		this.role = role;
 	}
 	
 	public Empresa getEmpresa() {
@@ -217,13 +215,10 @@ public class Usuario implements UserDetails{
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<GrantedAuthority> authorities = new ArrayList<>();
 		
-		for(Role role: roles) {
-			if(role.getNome().contains("ADMIN")) {
-				authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-				authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-			}else {
-				authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-			}
+		if(this.role.getNome().contains("ADMIN")) {
+			authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+		}else {
+			authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 		}
 		return authorities;
 	}
@@ -268,7 +263,7 @@ public class Usuario implements UserDetails{
 	@Override
 	public String toString() {
 		return "Usuario [id=" + id + ", nome=" + nome + ", idUsuarioConvite=" + idUsuarioConvite + ", idUsuarioConviteNv2="+ idUsuarioConviteNv2 +", email=" + email + ", ativo=" + ativo + ", dataCriado="
-				+ dataCriado + ", dataAlterado=" + dataAlterado + ", roles=" + roles.toArray() +", foto=" + foto +"]";
+				+ dataCriado + ", dataAlterado=" + dataAlterado + ", role=" + role +", foto=" + foto +"]";
 	}
 
 }

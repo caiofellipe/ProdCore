@@ -2,7 +2,6 @@ package br.com.api.prodcore.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -18,16 +17,14 @@ import br.com.api.prodcore.repository.PlanoAcessoRepository;
 @Service
 public class BeneficioAcessoService {
 	private final BeneficioAcessoRepository beneficioAcessoRepository;
-	private final PlanoAcessoRepository planoAcessoRepository;
 	private final NivelAcessoRepository nivelAcessoRepository;
 	
 	private final BeneficioAcessoMapper beneficioAcessoMapper;
 
 	public BeneficioAcessoService(BeneficioAcessoRepository beneficioAcessoRepository,
-			PlanoAcessoRepository planoAcessoRepository, NivelAcessoRepository nivelAcessoRepository, BeneficioAcessoMapper beneficioAcessoMapper) {
+			NivelAcessoRepository nivelAcessoRepository, BeneficioAcessoMapper beneficioAcessoMapper) {
 		super();
 		this.beneficioAcessoRepository = beneficioAcessoRepository;
-		this.planoAcessoRepository = planoAcessoRepository;
 		this.nivelAcessoRepository = nivelAcessoRepository;
 		
 		this.beneficioAcessoMapper = beneficioAcessoMapper;
