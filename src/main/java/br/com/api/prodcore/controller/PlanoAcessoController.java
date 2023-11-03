@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.api.prodcore.dto.NivelAcessoDTO;
 import br.com.api.prodcore.dto.PlanoAcessoDTO;
 import br.com.api.prodcore.dto.UsuarioDTO;
 import br.com.api.prodcore.dto.UsuarioPlanoAcessoDTO;
@@ -51,5 +52,15 @@ public class PlanoAcessoController {
 	public ResponseEntity<UsuarioPlanoAcessoDTO> contratoAtual(@PathVariable Long usuarioId) throws Exception{
 		return ResponseEntity.ok(planoAcessoService.contratoAtual(usuarioId));
 		
+	}
+	
+	@GetMapping("/niveis-acesso/beneficios")
+	public List<NivelAcessoDTO> niveisAcessoComBeneficios(){
+		return planoAcessoService.listarNiveisDeAcessoComBeneficios();
+	}
+
+	@GetMapping("/niveis-acesso/")
+	public List<NivelAcessoDTO> niveisAcesso(){
+		return planoAcessoService.listarNiveisAcesso();
 	}
 }

@@ -6,9 +6,11 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import br.com.api.prodcore.dto.NivelAcessoDTO;
 import br.com.api.prodcore.dto.PlanoAcessoDTO;
 import br.com.api.prodcore.dto.UsuarioDTO;
 import br.com.api.prodcore.dto.UsuarioPlanoAcessoDTO;
+import br.com.api.prodcore.dto.mapper.NivelAcessoMapper;
 import br.com.api.prodcore.dto.mapper.PlanoAcessoMapper;
 import br.com.api.prodcore.dto.mapper.UsuarioMapper;
 import br.com.api.prodcore.dto.mapper.UsuarioPlanoAcessoMapper;
@@ -41,12 +43,14 @@ public class PlanoAcessoService {
 	private final PlanoAcessoMapper planoAcessoMapper;
 	private final UsuarioMapper usuarioMapper;
 	private final UsuarioPlanoAcessoMapper usuarioPlanoAcessoMapper;
+	private final NivelAcessoMapper nivelAcessoMapper;
 	private UtilDatas util = new UtilDatas();
 
 	public PlanoAcessoService(PlanoAcessoRepository planoAcessoRepository, NivelAcessoRepository nivelAcessoRepository,
 			BeneficioAcessoRepository beneficioAcessoRepository, UsuarioRepository usuarioRepository, 
 			UsuarioPlanoAcessoRepository usuarioPlanoAcessoRepository, UsuarioService usuarioService, 
-			PlanoAcessoMapper planoAcessoMapper,  UsuarioMapper usuarioMapper, UsuarioPlanoAcessoMapper usuarioPlanoAcessoMapper) {
+			PlanoAcessoMapper planoAcessoMapper,  UsuarioMapper usuarioMapper, UsuarioPlanoAcessoMapper usuarioPlanoAcessoMapper, 
+			NivelAcessoMapper nivelAcessoMapper) {
 		super();
 		this.planoAcessoRepository = planoAcessoRepository;
 		this.nivelAcessoRepository = nivelAcessoRepository;
@@ -59,6 +63,7 @@ public class PlanoAcessoService {
 		this.planoAcessoMapper = planoAcessoMapper;
 		this.usuarioMapper = usuarioMapper;
 		this.usuarioPlanoAcessoMapper = usuarioPlanoAcessoMapper;
+		this.nivelAcessoMapper = nivelAcessoMapper;
 	}
 	
 	public PlanoAcessoDTO criar(PlanoAcessoDTO planoAcessoDTO) {
@@ -100,6 +105,12 @@ public class PlanoAcessoService {
 				.map(planoAcessoMapper::toDTO)
 				.collect(Collectors.toList());
 			*/
+	}
+	
+	public List<NivelAcessoDTO> listarNiveisDeAcessoComBeneficios(){
+		List<NivelAcesso> listNiveisAcesso = planoAcessoRepository.listarNiveisDeAcessoComBeneficios();
+		
+		return listNiveisAcesso.stream().map(nivelAcessoMapper::toDTO).collect(Collectors.toList());
 	}
 	
 	public PlanoAcessoDTO atualizar(PlanoAcessoDTO planoAcessoDTO) {
@@ -175,6 +186,12 @@ public class PlanoAcessoService {
 		}
 		
 		return usuarioPlanoAcessoMapper.toDTO(usuarioPlanoAcesso);
+	}
+
+	public List<NivelAcessoDTO> listarNiveisAcesso(){
+		List<NivelAcesso> listNiveisAcesso = planoAcessoRepository.listarNiveisDeAcesso();
+		
+		return listNiveisAcesso.stream().map(nivelAcessoMapper::toDTO).collect(Collectors.toList());
 	}
 	
 }

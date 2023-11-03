@@ -11,8 +11,8 @@ public interface NivelAcessoRepository extends JpaRepository<NivelAcesso, Long> 
 
 	@Query(value = "SELECT nb "
 			+ "FROM NivelAcesso nb "
-			+ "JOIN FETCH nb.beneficioAcesso "
-			+ "WHERE nb.id = :id")
-	List<NivelAcesso> pesquisaNivelAcessoEBeneficioAcessoPorId(Long id);
+			+ "WHERE nb.nome LIKE '%:nomeNivelAcesso%'")
+	NivelAcesso pesquisaNivelAcessoPeloNome(String nomeNivelAcesso);
+	
 	
 }

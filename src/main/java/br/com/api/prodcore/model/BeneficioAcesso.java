@@ -2,7 +2,6 @@ package br.com.api.prodcore.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,10 +21,12 @@ public class BeneficioAcesso {
 	@Column(name = "nome")
 	private String nome;
 	
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "nivel_acesso_id")
     @JsonIgnore
 	private NivelAcesso nivelAcesso;
+    
+    private String codigo;
 
 	public Long getId() {
 		return id;
@@ -49,6 +50,14 @@ public class BeneficioAcesso {
 
 	public void setNivelAcesso(NivelAcesso nivelAcesso) {
 		this.nivelAcesso = nivelAcesso;
+	}
+	
+	public String getCodigo() {
+		return codigo;
+	}
+	
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
 	}
 	
 	
