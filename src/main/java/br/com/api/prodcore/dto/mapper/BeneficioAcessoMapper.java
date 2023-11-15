@@ -14,7 +14,7 @@ public class BeneficioAcessoMapper {
 
 		return new BeneficioAcessoDTO(
 				beneficioAcesso.getId(), beneficioAcesso.getNome(), 
-				beneficioAcesso.getNivelAcesso(), beneficioAcesso.getCodigo(), beneficioAcesso.getNivelAcesso().getNome()
+				beneficioAcesso.getNivelAcesso(), beneficioAcesso.getCodigo(), beneficioAcesso.getNivelAcesso().getNome()				
 				);
 	}
 	

@@ -60,5 +60,4 @@ public class BeneficioAcesso {
 		this.codigo = codigo;
 	}
 	
-	
 }

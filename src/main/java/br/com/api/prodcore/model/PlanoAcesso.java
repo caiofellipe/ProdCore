@@ -48,6 +48,12 @@ public class PlanoAcesso {
 	@JoinColumn(name = "nivel_acesso_id")
 	private NivelAcesso nivelAcesso;
 	
+	@Column(name = "empresa_cadastra_produto")
+    private Boolean empresaCadastraProduto;
+    
+	@Column(name = "quantidade_produtos")
+    private Integer quantidadeProdutos;
+
 	
 	public Long getId() {
 		return id;
@@ -100,6 +106,22 @@ public class PlanoAcesso {
 	}
 	public void setNivelAcesso(NivelAcesso nivelAcesso) {
 		this.nivelAcesso = nivelAcesso;
+	}
+	
+	public Boolean getEmpresaCadastraProduto() {
+		return empresaCadastraProduto;
+	}
+	
+	public void setEmpresaCadastraProduto(Boolean empresaCadastraProduto) {
+		this.empresaCadastraProduto = empresaCadastraProduto;
+	}
+	
+	public Integer getQuantidadeProdutos() {
+		return quantidadeProdutos;
+	}
+	
+	public void setQuantidadeProdutos(Integer quantidadeProdutos) {
+		this.quantidadeProdutos = quantidadeProdutos;
 	}
 	
 }

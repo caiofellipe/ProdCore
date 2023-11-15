@@ -41,6 +41,7 @@ public class EmpresaMapper {
 		empresa.setRamo(empresaDTO.ramo());
 		empresa.setTelefone(empresaDTO.telefone());
 		empresa.setLogo(empresaDTO.logo());
+		empresa.setUsuario(empresaDTO.usuario());
 		
 		List<Produto> produtos = new ArrayList<Produto>();
 		if(empresaDTO.produto() != null) {

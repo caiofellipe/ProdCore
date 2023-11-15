@@ -19,5 +19,7 @@ public record PlanoAcessoDTO(
 	LocalDateTime dataEditado,
 	@JsonIgnore
 	List<Usuario> usuario,
-	NivelAcesso nivelAcesso
+	NivelAcesso nivelAcesso,
+	Boolean empresaCadastraProduto,
+	Integer quantidadeProdutos
 ) {}
